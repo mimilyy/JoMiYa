@@ -18,10 +18,15 @@ Pour basculer sur une autre branche :
 Pour lister les fichiers qu'on a modifiés et qu'on veut commit :
 	git status
 
+Pour sélectionner un fichier à commit pour la suite :
+	git add nomfichier.txt
+
 Pour commit tous les fichiers :
 	git commit -a
 
-Actualiser le nouveau projet qui a déjà été créé :
+- a pour commit tous les fichiers modifiés
+
+Actualiser le nouveau projet qui a déjà été créé depuis la branche main :
 	git pull origin main
 
 
