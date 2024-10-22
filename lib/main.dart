@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
-//mapping package for Flutter, personnalisable
+import 'package:flutter_map/flutter_map.dart' as flutterMap;
 import 'package:latlong2/latlong.dart';
-//library for common latitude and longitude calculation
-
-//commentaire de test github
+import 'search_manager.dart'; // Importer le fichier de gestion de recherche
+import 'location_manager.dart'; // Importer le fichier de gestion de la localisation
 
 void main() {
   runApp(const MyApp());
@@ -13,7 +11,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,47 +26,89 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final flutterMap.MapController _mapController = flutterMap.MapController(); // Contrôleur pour flutter_map
+  List<flutterMap.Marker> _markers = []; // Liste des marqueurs
+  late LocationManager _locationManager; // Instance du gestionnaire de localisation
+  final GlobalKey<SearchManagerState> _searchManagerKey = GlobalKey<SearchManagerState>(); // Ajout de la clé
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialiser le gestionnaire de localisation
+    _locationManager = LocationManager(mapController: _mapController, markers: _markers);
+    _locationManager.getCurrentLocation(); // Récupérer la position actuelle
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Test Projet 2A - Jovenet, Militon, Yao'),
+        title: const Text('JoMiYa Corporation'),
       ),
-      bottomNavigationBar: BottomNavigationBar(items: const [
-            BottomNavigationBarItem(
-              label: 'Carte',
-              icon: Icon(
-                Icons.home,
-                color: Colors.lightBlue,),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            label: 'Menu',
+            icon: Icon(
+              Icons.home,
+              color: Colors.lightBlue,
+              size:20,
             ),
-            BottomNavigationBarItem(
-              label: 'Favoris',
-              icon: Icon(
-                Icons.favorite,
-                color: Colors.pink,
-              ),
-            )
-          ],
-      ),
-      body: content(),
-    );
-  }
-
-  Widget content() {
-    return FlutterMap(
-      options: const MapOptions(initialCenter: LatLng(48.864716, 2.349014), //Latitude et longitude de Paris
-      initialZoom: 11,
-      interactionOptions: 
-          InteractionOptions(flags: ~InteractiveFlag.doubleTapDragZoom),
           ),
-      children: [
-        openStreetMapTileLayer,
-      ],
+          BottomNavigationBarItem(
+            label: 'Adresses',
+            icon: Icon(
+              Icons.favorite,
+              color: Colors.pink,
+              size:20,
+            ),
+          ),
+        ],
+      ),
+      body: Stack( // Utiliser un Stack pour superposer le bouton sur la carte
+        children: [
+          Column(
+            children: [
+              // Intégration de la barre de recherche avec gestion des recherches récentes
+              SearchManager(
+                key: _searchManagerKey, // Ajout de la clé ici
+                mapController: _mapController,
+                markers: _markers,
+              ),
+              Expanded(
+                child: flutterMap.FlutterMap(
+                  mapController: _mapController,
+                  options: flutterMap.MapOptions(
+                    initialCenter: LatLng(48.864716, 2.349014), // Latitude et longitude de Paris
+                    initialZoom: 11,
+                  ),
+                  children: [
+                    openStreetMapTileLayer,
+                    flutterMap.MarkerLayer(markers: _markers),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Positioned(
+            bottom: 20,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: () {
+                _locationManager.getCurrentLocation(); // Centrer la carte sur la localisation actuelle
+              },
+              child: const Icon(Icons.location_searching), // Icône pour le bouton
+              backgroundColor: Colors.blue,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
 
-TileLayer get openStreetMapTileLayer => TileLayer(
+// TileLayer pour les tuiles de la carte OpenStreetMap
+flutterMap.TileLayer get openStreetMapTileLayer => flutterMap.TileLayer(
   urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
   userAgentPackageName: 'dev.fleaflet.flutter_map.example',
 );

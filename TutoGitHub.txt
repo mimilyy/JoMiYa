@@ -24,7 +24,10 @@ Pour sélectionner un fichier à commit pour la suite :
 Pour commit tous les fichiers :
 	git commit -a
 
-- a pour commit tous les fichiers modifiés
+- a pour commit tous les fichiers modifiés (mais pas obligé de le mettre si on avait fait la commande git add.. auparavant pour spécifier un seul fichier)
+
+Pour  push le commit de la branche main : 
+	git push origin main
 
 Actualiser le nouveau projet qui a déjà été créé depuis la branche main :
 	git pull origin main

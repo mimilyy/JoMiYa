@@ -43,3 +43,19 @@
         </intent>
     </queries>
 </manifest>
+<!-- Pour pouvoir localiser l'appareil de la personne -->
+<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
+<application
+    android:requestLegacyExternalStorage="true"
+    ... >
+    <!-- Ajoute cette balise pour Android 10+ -->
+    <meta-data
+        android:name="com.google.android.geo.API_KEY"
+        android:value="YOUR_GOOGLE_MAPS_API_KEY"/>
+    
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+</application>
+
+
