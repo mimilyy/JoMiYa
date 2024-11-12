@@ -28,14 +28,14 @@ class LocationManager {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         // Permissions refusées
-        return Future.error('Location permissions are denied');;
+        return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
       // Permissions refusées de manière permanente
       return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');;
+          'Location permissions are permanently denied, we cannot request permissions.');
     }
 
     // Récupérer la position actuelle
