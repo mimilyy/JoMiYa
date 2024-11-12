@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart' as flutterMap;
 import 'package:latlong2/latlong.dart';
 import 'search_manager.dart'; // Importer le fichier de gestion de recherche
 import 'location_manager.dart'; // Importer le fichier de gestion de la localisation
+import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
 void main() {
   runApp(const MyApp());
@@ -75,12 +76,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 mapController: _mapController,
                 markers: _markers,
               ),
+
               Expanded(
-                child: flutterMap.FlutterMap(
+                child: flutterMap.FlutterMap(// Affichage de la carte
                   mapController: _mapController,
                   options: flutterMap.MapOptions(
                     initialCenter: LatLng(48.864716, 2.349014), // Latitude et longitude de Paris
                     initialZoom: 11,
+                    //enableScrollWheelZoom: true, // Permettre le zoom avec la molette
                   ),
                   children: [
                     openStreetMapTileLayer,
@@ -90,6 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ],
           ),
+
           Positioned(
             bottom: 20,
             right: 20,

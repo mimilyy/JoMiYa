@@ -376,6 +376,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  osrm:
+    dependency: "direct main"
+    description:
+      name: osrm
+      sha256: "29947a22b59b468b5ae0e138e774bf5a57225911ca09610bcee85679d6e958e3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.8"
   path:
     dependency: transitive
     description:
@@ -488,6 +496,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  recase:
+    dependency: transitive
+    description:
+      name: recase
+      sha256: e4eb4ec2dcdee52dcf99cb4ceabaffc631d7424ee55e56f280bc039737f89213
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   routing_client_dart:
     dependency: transitive
     description:
@@ -649,10 +665,10 @@ packages:
     dependency: transitive
     description:
       name: url_launcher_android
-      sha256: "8fc3bae0b68c02c47c5c86fa8bfa74471d42687b0eded01b78de87872db745e2"
+      sha256: "6fc2f56536ee873eeb867ad176ae15f304ccccc357848b351f6f0d8d4a40d193"
       url: "https://pub.dev"
     source: hosted
-    version: "6.3.12"
+    version: "6.3.14"
   url_launcher_ios:
     dependency: transitive
     description:

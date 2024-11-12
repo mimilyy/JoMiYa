@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'itineraire_manager.dart';
 
 class SearchManager extends StatefulWidget {
   final flutterMap.MapController mapController; // Le contrôleur de la carte
@@ -62,6 +63,9 @@ class SearchManagerState extends State<SearchManager> {
     return null;
   }
 
+
+
+// Dans _zoomToLocation
   void _zoomToLocation(LatLng targetLocation) {
     setState(() {
       widget.markers.clear();
@@ -70,16 +74,22 @@ class SearchManagerState extends State<SearchManager> {
           point: targetLocation,
           width: 60,
           height: 60,
-          child: const Icon(
-            Icons.location_pin,
-            size: 30,
-            color: Colors.red,
+          child: GestureDetector(
+            onTap: () {
+              ItineraireManager.showItineraireOptions(context, targetLocation);
+            },
+            child: const Icon(
+              Icons.location_pin,
+              size: 30,
+              color: Colors.red,
+            ),
           ),
         ),
       );
     });
     widget.mapController.move(targetLocation, 15);
   }
+
 
   void _triggerSearch(String query) async {
     final location = await _searchLocation(query);
