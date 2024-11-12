@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as flutterMap;
 import 'package:latlong2/latlong.dart';
-import 'search_manager.dart'; // Importer le fichier de gestion de recherche
-import 'location_manager.dart'; // Importer le fichier de gestion de la localisation
+import 'ui/components/search_manager.dart'; // Importer le fichier de gestion de recherche
+import 'services/routing/itineraire_manager.dart'; // Importer le fichier de gestion de la localisation
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 
 void main() {

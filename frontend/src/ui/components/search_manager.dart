@@ -4,7 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'itineraire_manager.dart';
+import '../../services/routing/itineraire_manager.dart';
 
 class SearchManager extends StatefulWidget {
   final flutterMap.MapController mapController; // Le contrôleur de la carte
