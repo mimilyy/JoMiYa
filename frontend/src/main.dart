@@ -4,6 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'ui/components/search_manager.dart'; // Importer le fichier de gestion de recherche
 import 'services/routing/itineraire_manager.dart'; // Importer le fichier de gestion de la localisation
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
+import 'services/location_manager.dart';
 
 void main() {
   runApp(const MyApp());
