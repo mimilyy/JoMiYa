@@ -5,6 +5,7 @@ import 'ui/components/search_manager.dart'; // Importer le fichier de gestion de
 import 'services/routing/itineraire_manager.dart'; // Importer le fichier de gestion de la localisation
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'services/location_manager.dart';
+import '../src/utils/theme/theme.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +16,10 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDarkMode = MediaQuery.of(context).platformBrightness == Brightness.dark;
+
     return MaterialApp(
+      theme: isDarkMode ? TAppTheme.darkTheme : TAppTheme.lightTheme,
       home: MyHomePage(),
       debugShowCheckedModeBanner: false,
     );
