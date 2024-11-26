@@ -75,9 +75,10 @@ class SearchManagerState extends State<SearchManager> {
           width: 60,
           height: 60,
           child: GestureDetector(
+            /* // Quand je tape ça montre les itineraires options
             onTap: () {
               ItineraireManager.showItineraireOptions(context, targetLocation);
-            },
+            },*/
             child: const Icon(
               Icons.location_pin,
               size: 30,
