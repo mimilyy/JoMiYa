@@ -5,6 +5,7 @@ import 'ui/components/search_manager.dart'; // Importer le fichier de gestion de
 import 'services/routing/itineraire_manager.dart'; // Importer le fichier de gestion de la localisation
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'services/location_manager.dart';
+import './ItineraireManager.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,6 +32,12 @@ class _MyHomePageState extends State<MyHomePage> {
   final flutterMap.MapController _mapController = flutterMap.MapController(); // Contrôleur pour flutter_map
   List<flutterMap.Marker> _markers = []; // Liste des marqueurs
   late LocationManager _locationManager; // Instance du gestionnaire de localisation
+  
+  //////////////////////
+  ///TEST ITINERAIRE //
+  late ItineraireManager _itineraireManager; // Instance du gestionnaire d'itinéraire
+  //////////////////////
+
   final GlobalKey<SearchManagerState> _searchManagerKey = GlobalKey<SearchManagerState>(); // Ajout de la clé
 
   @override
@@ -39,6 +46,12 @@ class _MyHomePageState extends State<MyHomePage> {
     // Initialiser le gestionnaire de localisation
     _locationManager = LocationManager(mapController: _mapController, markers: _markers);
     _locationManager.getCurrentLocation(); // Récupérer la position actuelle
+
+    //////////////////////
+    ///TEST ITINERAIRE //
+    // Initialiser le gestionnaire d'itinéraire
+    _itineraireManager = ItineraireManager(mapController: _mapController, markers: _markers);
+    //////////////////////
   }
 
   @override
@@ -106,11 +119,33 @@ class _MyHomePageState extends State<MyHomePage> {
               backgroundColor: Colors.blue,
             ),
           ),
+
+          ////////////////////////
+          //** TEST ITINERAIRE **/
+
+          // Bouton pour calculer l'itinéraire
+          Positioned(
+            bottom: 80,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: () {
+                final start = LatLng(48.864716, 2.349014); // Paris
+                final end = LatLng(49.036476, 2.076928); // Cergy
+                _itineraireManager.calculateItinerary(start, end, onUpdate: () {
+                  setState(() {});
+                });
+              },
+              child: const Icon(Icons.directions),
+              backgroundColor: Colors.green,
+            ),
+          ),
+          //////////////////////
         ],
       ),
     );
   }
-}
+}  
+
 
 // TileLayer pour les tuiles de la carte OpenStreetMap
 flutterMap.TileLayer get openStreetMapTileLayer => flutterMap.TileLayer(

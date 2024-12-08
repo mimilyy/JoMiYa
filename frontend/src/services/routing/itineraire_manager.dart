@@ -1,3 +1,5 @@
+/*
+
 // itineraire_manager.dart
 import 'package:flutter/material.dart';
 import 'package:latlong2/latlong.dart';
@@ -30,4 +32,4 @@ class ItineraireManager extends LocationManager {
       print("Erreur lors de la récupération de la localisation : $e");
     }
   }
-}
+}*/
