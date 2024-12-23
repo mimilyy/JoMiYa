@@ -35,6 +35,7 @@ class _MyHomePageState extends State<MyHomePage> {
   
   //////////////////////
   ///TEST ITINERAIRE //
+  final List<flutterMap.Polyline> _polylines = [];
   late ItineraireManager _itineraireManager; // Instance du gestionnaire d'itinéraire
   //////////////////////
 
@@ -50,7 +51,11 @@ class _MyHomePageState extends State<MyHomePage> {
     //////////////////////
     ///TEST ITINERAIRE //
     // Initialiser le gestionnaire d'itinéraire
-    _itineraireManager = ItineraireManager(mapController: _mapController, markers: _markers);
+    _itineraireManager = ItineraireManager(
+      mapController: _mapController, 
+      markers: _markers,
+      polylines: _polylines,
+    );
     //////////////////////
   }
 
@@ -102,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     openStreetMapTileLayer,
                     flutterMap.MarkerLayer(markers: _markers),
+                    flutterMap.PolylineLayer(polylines: _polylines), // Ajout de la couche de polylines
                   ],
                 ),
               ),

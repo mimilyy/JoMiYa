@@ -1,21 +1,23 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
-import 'package:flutter_map/flutter_map.dart' as flutterMap;
+import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter/material.dart';
 
-
 class ItineraireManager {
-  final flutterMap.MapController mapController;
-  final List<flutterMap.Marker> markers;
+  final MapController mapController;
+  final List<Marker> markers;
+  final List<Polyline> polylines; // Nouvelle liste pour les polylines
 
-  
-  ItineraireManager({required this.mapController, required this.markers});
-  
-  Future<void> calculateItinerary(LatLng start, LatLng end,{Function()? onUpdate}) async {
-    // driving (transport)
+  ItineraireManager({
+    required this.mapController,
+    required this.markers,
+    required this.polylines,
+  });
+
+  Future<void> calculateItinerary(LatLng start, LatLng end, {Function()? onUpdate}) async {
     final url =
-        'http://router.project-osrm.org/route/v1/&profile/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?overview=full&geometries=geojson';
+        'http://router.project-osrm.org/route/v1/driving/${start.longitude},${start.latitude};${end.longitude},${end.latitude}?overview=full&geometries=geojson';
 
     try {
       final response = await http.get(Uri.parse(url));
@@ -28,60 +30,46 @@ class ItineraireManager {
 
           // Convertir la géométrie en une liste de LatLng
           final polylinePoints = geometry
-              .map<LatLng>(
-                  (point) => LatLng(point[1] as double, point[0] as double))
+              .map<LatLng>((point) => LatLng(point[1] as double, point[0] as double))
               .toList();
 
           // Centrer la carte sur le début du trajet
           mapController.move(start, 10);
 
           // Ajouter des marqueurs pour le début et la fin
+          markers.clear();
           markers.addAll([
-            flutterMap.Marker(
+            Marker(
               point: start,
               width: 40.0,
               height: 40.0,
-              child: const Icon(
-                Icons.location_on, 
-                color: Colors.blue),
-              ),
-            flutterMap.Marker(
+              child: const Icon(Icons.location_on, color: Colors.blue),
+            ),
+            Marker(
               point: end,
-              child:const Icon(
-                Icons.location_on, 
-                color: Colors.red),
-              ),
+              width: 40.0,
+              height: 40.0,
+              child: const Icon(Icons.location_on, color: Colors.red),
+            ),
           ]);
 
           // Ajouter une polyline pour l'itinéraire
-          final polylineLayer = flutterMap.PolylineLayer(
-            polylines: [
-              flutterMap.Polyline(
-                points: polylinePoints,
-                strokeWidth: 4.0,
-                color: Colors.blue,
-              ),
-            ],
+          polylines.clear();
+          polylines.add(
+            Polyline(
+              points: polylinePoints,
+              strokeWidth: 4.0,
+              color: Colors.blue,
+            ),
           );
 
-          // Mettre à jour la carte
-          markers.addAll(polylineLayer.polylines
-              .map((polyline) => flutterMap.Marker(
-                    point: polyline.points.first,
-                    child: Container(),
-                  ))
-              .toList());
-              // Appeler le callback pour indiquer la fin de l'opération
-
-          // Rafraîchir la carte
+          // Appeler le callback pour rafraîchir la carte
+          if (onUpdate != null) {
+            onUpdate();
+          }
         } else {
           print('Aucun itinéraire trouvé.');
         }
-
-        //////// TEST DE L'API //////////////
-        print('Réponse brute de l\'API : ${response.body}');
-        /////////////////////////////////////
-        ///
       } else {
         print('Erreur API OSRM : ${response.reasonPhrase}');
       }

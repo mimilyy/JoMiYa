@@ -1,3 +1,5 @@
+
+/*
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart'; // Pour convertir l'adresse en coordonnées
 import 'package:latlong2/latlong.dart';
@@ -123,3 +125,4 @@ class _SearchBarState extends State<SearchBar> {
     );
   }
 }
+*/
