@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:./frontend/src/main.dart';
+import 'package:jomiya_projet/frontend/src/main.dart';
 
 
 void main() {
