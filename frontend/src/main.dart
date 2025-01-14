@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as flutterMap;
 import 'package:latlong2/latlong.dart';
 import 'ui/components/search_manager.dart'; // Importer le fichier de gestion de recherche
-import 'services/routing/itineraire_manager.dart'; // Importer le fichier de gestion de la localisation
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'services/location_manager.dart';
-import './ItineraireManager.dart';
+import 'services/routing/itineraire_manager.dart';
 
 void main() {
   runApp(const MyApp());
@@ -135,8 +134,8 @@ class _MyHomePageState extends State<MyHomePage> {
             right: 20,
             child: FloatingActionButton(
               onPressed: () {
-                final start = LatLng(48.864716, 2.349014); // Paris
-                final end = LatLng(49.036476, 2.076928); // Cergy
+                final start = LatLng(49.042456, 2.070530); // Residence
+                final end = LatLng(49.039022, 2.071265); // ENSEA
                 _itineraireManager.calculateItinerary(start, end, onUpdate: () {
                   setState(() {});
                 });
@@ -151,7 +150,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }  
-
 
 // TileLayer pour les tuiles de la carte OpenStreetMap
 flutterMap.TileLayer get openStreetMapTileLayer => flutterMap.TileLayer(
