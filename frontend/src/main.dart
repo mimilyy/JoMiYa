@@ -6,6 +6,7 @@ import 'services/routing/itineraire_manager.dart'; // Importer le fichier de ges
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'services/location_manager.dart';
 import '../src/utils/theme/theme.dart';
+import '../src/ui/components/navigation_menu.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +21,8 @@ class MyApp extends StatelessWidget {
 
     return MaterialApp(
       theme: isDarkMode ? TAppTheme.darkTheme : TAppTheme.lightTheme,
-      home: MyHomePage(),
+      home: NavigationMenu(),
+      //home: MyHomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
