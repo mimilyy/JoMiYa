@@ -39,6 +39,7 @@ dependencies:
   get : 4.6.6
   iconsax_flutter: 1.0.0
   smooth_page_indicator : 1.2.0+3
+  flutter_svg: ^2.0.17
 
   flutter:
     sdk: flutter
