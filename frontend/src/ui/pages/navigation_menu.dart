@@ -12,19 +12,24 @@ class NavigationMenu extends StatelessWidget {
 
     return Scaffold(
       bottomNavigationBar: Obx(
-        () => NavigationBar(
+            () => NavigationBar(
           height: 80,
           elevation: 0,
           selectedIndex: controller.selectedIndex.value,
-          onDestinationSelected: (index) => controller.selectedIndex.value = index,
+          onDestinationSelected: (index) {
+            controller.selectedIndex.value = index;
+          },
           destinations: const [
             NavigationDestination(icon: Icon(Iconsax.home), label: 'Voyager'),
             NavigationDestination(icon: Icon(Iconsax.heart), label: 'Favoris'),
             NavigationDestination(icon: Icon(Iconsax.user), label: 'Profil'),
           ],
-        )
+        ),
       ),
-      body: Obx(()=> controller.screens[controller.selectedIndex.value]),
+      // Afficher l'écran sélectionné
+      body: Obx(
+            () => controller.screens[controller.selectedIndex.value],
+      ),
     );
   }
 }
