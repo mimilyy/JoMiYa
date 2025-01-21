@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';  // Importation de GetX
 import 'components/profile_menu.dart';
 import 'components/profile_pic.dart';
+import 'userProfile/complete_profile_screen.dart';  // Assure-toi d'importer ton fichier d'écran
 
 class ProfileScreen extends StatelessWidget {
   static String routeName = "/profile";
 
   const ProfileScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Profile"),
+        title: const Text("Profil"),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(vertical: 20),
@@ -19,9 +22,12 @@ class ProfileScreen extends StatelessWidget {
             const ProfilePic(),
             const SizedBox(height: 20),
             ProfileMenu(
-              text: "My Account",
+              text: "Mon compte",
               icon: "assets/icons/User Icon.svg",
-              press: () => {},
+              press: () {
+                // Utilisation de GetX pour naviguer vers CompleteProfileScreen
+                Get.to(() => const CompleteProfileScreen());
+              },
             ),
             ProfileMenu(
               text: "Notifications",
@@ -29,17 +35,17 @@ class ProfileScreen extends StatelessWidget {
               press: () {},
             ),
             ProfileMenu(
-              text: "Settings",
+              text: "Paramètres",
               icon: "assets/icons/Settings.svg",
               press: () {},
             ),
             ProfileMenu(
-              text: "Help Center",
+              text: "Aide",
               icon: "assets/icons/Question mark.svg",
               press: () {},
             ),
             ProfileMenu(
-              text: "Log Out",
+              text: "Se déconnecter",
               icon: "assets/icons/Log out.svg",
               press: () {},
             ),
