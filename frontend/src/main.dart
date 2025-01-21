@@ -134,10 +134,10 @@ class _MyHomePageState extends State<MyHomePage> {
             right: 20,
             child: FloatingActionButton(
               onPressed: () {
-                final start = LatLng(49.042456, 2.070530); // Residence
-                final end = LatLng(49.039022, 2.071265); // ENSEA
-                _itineraireManager.calculateItinerary(start, end, onUpdate: () {
-                  setState(() {});
+                final start = LatLng(48.87227545172108, 2.2948712995808798); // Depart
+                final end = LatLng(48.874216029249546, 2.292865007293016); // Arrivee
+                 _itineraireManager.calculateItinerary(start, end, onUpdate: () {
+                  setState(() {}); // Rafraichit la carte après calcul
                 });
               },
               child: const Icon(Icons.directions),
