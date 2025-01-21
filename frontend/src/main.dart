@@ -5,6 +5,7 @@ import 'ui/components/search_manager.dart'; // Importer le fichier de gestion de
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'services/location_manager.dart';
 import 'services/routing/itineraire_manager.dart';
+import 'utils/theme/theme.dart';
 
 void main() {
   runApp(const MyApp());
