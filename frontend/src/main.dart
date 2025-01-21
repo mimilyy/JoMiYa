@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as flutterMap;
 import 'package:latlong2/latlong.dart';
 import 'ui/components/search_manager.dart'; // Importer le fichier de gestion de recherche
-import 'services/routing/itineraire_manager.dart'; // Importer le fichier de gestion de la localisation
 import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'services/location_manager.dart';
-import '../src/utils/theme/theme.dart';
+import 'services/routing/itineraire_manager.dart';
 
 void main() {
   runApp(const MyApp());
@@ -35,6 +34,13 @@ class _MyHomePageState extends State<MyHomePage> {
   final flutterMap.MapController _mapController = flutterMap.MapController(); // Contrôleur pour flutter_map
   List<flutterMap.Marker> _markers = []; // Liste des marqueurs
   late LocationManager _locationManager; // Instance du gestionnaire de localisation
+  
+  //////////////////////
+  ///TEST ITINERAIRE //
+  final List<flutterMap.Polyline> _polylines = [];
+  late ItineraireManager _itineraireManager; // Instance du gestionnaire d'itinéraire
+  //////////////////////
+
   final GlobalKey<SearchManagerState> _searchManagerKey = GlobalKey<SearchManagerState>(); // Ajout de la clé
 
   @override
@@ -43,6 +49,16 @@ class _MyHomePageState extends State<MyHomePage> {
     // Initialiser le gestionnaire de localisation
     _locationManager = LocationManager(mapController: _mapController, markers: _markers);
     _locationManager.getCurrentLocation(); // Récupérer la position actuelle
+
+    //////////////////////
+    ///TEST ITINERAIRE //
+    // Initialiser le gestionnaire d'itinéraire
+    _itineraireManager = ItineraireManager(
+      mapController: _mapController, 
+      markers: _markers,
+      polylines: _polylines,
+    );
+    //////////////////////
   }
 
   @override
@@ -93,6 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: [
                     openStreetMapTileLayer,
                     flutterMap.MarkerLayer(markers: _markers),
+                    flutterMap.PolylineLayer(polylines: _polylines), // Ajout de la couche de polylines
                   ],
                 ),
               ),
@@ -110,11 +127,32 @@ class _MyHomePageState extends State<MyHomePage> {
               backgroundColor: Colors.blue,
             ),
           ),
+
+          ////////////////////////
+          //** TEST ITINERAIRE **/
+
+          // Bouton pour calculer l'itinéraire
+          Positioned(
+            bottom: 80,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: () {
+                final start = LatLng(48.87227545172108, 2.2948712995808798); // Depart
+                final end = LatLng(48.874216029249546, 2.292865007293016); // Arrivee
+                 _itineraireManager.calculateItinerary(start, end, onUpdate: () {
+                  setState(() {}); // Rafraichit la carte après calcul
+                });
+              },
+              child: const Icon(Icons.directions),
+              backgroundColor: Colors.green,
+            ),
+          ),
+          //////////////////////
         ],
       ),
     );
   }
-}
+}  
 
 // TileLayer pour les tuiles de la carte OpenStreetMap
 flutterMap.TileLayer get openStreetMapTileLayer => flutterMap.TileLayer(
