@@ -6,6 +6,7 @@ import 'location_manager.dart';
 import '../utils/theme/theme.dart';
 import '../ui/pages/navigation_menu.dart';
 import '../ui/components/search_manager.dart';
+import 'routing/itineraire_manager.dart'; // Assurez-vous d'importer le bon fichier de gestion d'itinéraire.
 
 class VoyagerScreen extends StatefulWidget {
   @override
@@ -16,7 +17,13 @@ class _VoyagerScreenState extends State<VoyagerScreen> {
   final flutterMap.MapController _mapController = flutterMap.MapController(); // Contrôleur pour flutter_map
   List<flutterMap.Marker> _markers = []; // Liste des marqueurs
   late LocationManager _locationManager; // Instance du gestionnaire de localisation
+  late ItineraireManager _itineraireManager; // Instance du gestionnaire d'itinéraire
   final GlobalKey<SearchManagerState> _searchManagerKey = GlobalKey<SearchManagerState>(); // Ajout de la clé
+
+  //////////////////////
+  // Variables pour les polylines (itinéraires)
+  final List<flutterMap.Polyline> _polylines = [];
+  //////////////////////
 
   @override
   void initState() {
@@ -24,6 +31,13 @@ class _VoyagerScreenState extends State<VoyagerScreen> {
     // Initialiser le gestionnaire de localisation
     _locationManager = LocationManager(mapController: _mapController, markers: _markers);
     _locationManager.getCurrentLocation(); // Récupérer la position actuelle
+
+    // Initialiser le gestionnaire d'itinéraire
+    _itineraireManager = ItineraireManager(
+      mapController: _mapController,
+      markers: _markers,
+      polylines: _polylines,
+    );
   }
 
   @override
@@ -52,11 +66,13 @@ class _VoyagerScreenState extends State<VoyagerScreen> {
                   children: [
                     openStreetMapTileLayer,
                     flutterMap.MarkerLayer(markers: _markers),
+                    flutterMap.PolylineLayer(polylines: _polylines), // Ajout de la couche de polylines
                   ],
                 ),
               ),
             ],
           ),
+          // Bouton pour centrer la carte sur la localisation actuelle
           Positioned(
             bottom: 20,
             right: 20,
@@ -66,6 +82,23 @@ class _VoyagerScreenState extends State<VoyagerScreen> {
               },
               child: const Icon(Icons.location_searching), // Icône pour le bouton
               backgroundColor: Colors.blue,
+            ),
+          ),
+
+          // Bouton pour calculer l'itinéraire
+          Positioned(
+            bottom: 80,
+            right: 20,
+            child: FloatingActionButton(
+              onPressed: () {
+                final start = LatLng(49.03779673392135, 2.077505196054024); // Départ
+                final end = LatLng(49.039102034981504, 2.0764217110940724); // Arrivée
+                _itineraireManager.calculateItinerary(start, end, onUpdate: () {
+                  setState(() {}); // Rafraichit la carte après calcul
+                });
+              },
+              child: const Icon(Icons.directions),
+              backgroundColor: Colors.green,
             ),
           ),
         ],
