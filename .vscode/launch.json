@@ -5,18 +5,18 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "JoMiYa_projet",
+            "name": "JoMiYa",
             "request": "launch",
             "type": "dart"
         },
         {
-            "name": "JoMiYa_projet (profile mode)",
+            "name": "JoMiYa (profile mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "profile"
         },
         {
-            "name": "JoMiYa_projet (release mode)",
+            "name": "JoMiYa (release mode)",
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"

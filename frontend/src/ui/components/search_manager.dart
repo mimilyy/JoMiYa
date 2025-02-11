@@ -4,7 +4,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import '../../services/routing/itineraire_manager.dart';
+//import '../../services/routing/itineraire_manager.dart';
 
 class SearchManager extends StatefulWidget {
   final flutterMap.MapController mapController; // Le contrôleur de la carte
@@ -75,9 +75,10 @@ class SearchManagerState extends State<SearchManager> {
           width: 60,
           height: 60,
           child: GestureDetector(
+            /* // Quand je tape ça montre les itineraires options
             onTap: () {
               ItineraireManager.showItineraireOptions(context, targetLocation);
-            },
+            },*/
             child: const Icon(
               Icons.location_pin,
               size: 30,
