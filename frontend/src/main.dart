@@ -134,8 +134,8 @@ class _MyHomePageState extends State<MyHomePage> {
             right: 20,
             child: FloatingActionButton(
               onPressed: () {
-                final start = LatLng(48.87227545172108, 2.2948712995808798); // Depart
-                final end = LatLng(48.874216029249546, 2.292865007293016); // Arrivee
+                final start = LatLng(49.03779673392135, 2.077505196054024); // Depart
+                final end = LatLng(49.039102034981504, 2.0764217110940724); // Arrivee
                  _itineraireManager.calculateItinerary(start, end, onUpdate: () {
                   setState(() {}); // Rafraichit la carte après calcul
                 });
