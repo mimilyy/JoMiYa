@@ -89,68 +89,6 @@ class ItineraireManager {
   }
 }
 
-/*
-      print('URL appelée : $url');
-      final response = await http.get(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        print('Réponse reçue : ${response.body}');
-        print('');
-        print('');
-        final data = json.decode(response.body);
-        final paths = data['paths'] as List;
-        if (paths.isNotEmpty) {
-          final path = paths[0];
-          final encodedPolyline = path['points'];
-          print('les coordonnées brut : $encodedPolyline');
-          print('');
-          print('');
-          final polylinePoints = _decodePolyline(encodedPolyline);
-          print('les coordonnées décodées $polylinePoints');
-          print('');
-          print('');
-
-          mapController.move(start, 10);
-
-          markers.clear();
-          markers.addAll([
-            Marker(
-              point: start,
-              width: 40.0,
-              height: 40.0,
-              child: const Icon(Icons.location_on, color: Colors.blue),
-            ),
-            Marker(
-              point: end,
-              width: 40.0,
-              height: 40.0,
-              child: const Icon(Icons.location_on, color: Colors.red),
-            ),
-          ]);
-
-          polylines.clear();
-          polylines.add(
-            Polyline(
-              points: polylinePoints,
-              strokeWidth: 4.0,
-              color: Colors.blue,
-            ),
-          );
-
-          if (onUpdate != null) {
-            onUpdate();
-          }
-        } else {
-          print('Aucun itinéraire trouvé.');
-        }
-      } else {
-        print('Erreur API GraphHopper : ${response.reasonPhrase}');
-      }
-    } catch (e) {
-      print('Erreur de connexion : $e');
-    }
-  }
-*/
   // Fonction pour décoder la polyline encodée
   List<LatLng> _decodePolyline(String encodedPolyline) {
     PolylinePoints polylinePoints = PolylinePoints();
