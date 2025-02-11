@@ -11,7 +11,8 @@ class ProfileMenu extends StatelessWidget {
     this.press,
   }) : super(key: key);
 
-  final String text, icon;
+  final String text;
+  final Widget icon;  // Changer pour Widget au lieu de String
   final VoidCallback? press;
 
   @override
@@ -28,11 +29,7 @@ class ProfileMenu extends StatelessWidget {
         onPressed: press,
         child: Row(
           children: [
-            SvgPicture.asset(
-              icon,
-              color: kPrimaryColor,
-              width: 22,
-            ),
+            icon,  // Utilise ici le widget icon
             const SizedBox(width: 20),
             Expanded(child: Text(text)),
             const Icon(Icons.arrow_forward_ios),
