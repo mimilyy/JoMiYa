@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as flutterMap;
+import 'package:jomiya_projet/backend/database/models/database_helper.dart';
 import 'package:latlong2/latlong.dart';
 import 'ui/components/search_manager.dart'; // Importer le fichier de gestion de recherche
 import 'services/routing/itineraire_manager.dart'; // Importer le fichier de gestion de la localisation
@@ -7,13 +10,24 @@ import 'package:flutter_osm_plugin/flutter_osm_plugin.dart';
 import 'services/location_manager.dart';
 import 'utils/theme/theme.dart';
 import 'ui/pages/navigation_menu.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart'; // Pour Windows, Linux, macOS
+import 'dart:io';
+import 'package:flutter/foundation.dart';
 
-void main() {
+
+Future<void> main() async {
+
+
+  WidgetsFlutterBinding.ensureInitialized(); // Required for async code before runApp()
+  await DatabaseHelper.initializeDatabaseFactory(); // Initialize correct DB type
+
+
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
 
   @override
   Widget build(BuildContext context) {

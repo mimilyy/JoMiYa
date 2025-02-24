@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jomiya_projet/backend/database/models/database_helper.dart';
 
 class CreateProfilePage extends StatelessWidget {
-  final TextEditingController nameController = TextEditingController();
+  final TextEditingController nameController = TextEditingController(); //TextEditingController permet de recuperer du texte
   final TextEditingController emailController = TextEditingController();
 
   @override
@@ -21,22 +21,38 @@ class CreateProfilePage extends StatelessWidget {
               controller: emailController,
               decoration: InputDecoration(labelText: 'Email'),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20), //Le code jusqu'ici créer l'interface utilisateur, la suite du code créer la logique
             ElevatedButton(
               onPressed: () async {
                 String name = nameController.text;
                 String email = emailController.text;
 
                 if (name.isNotEmpty && email.isNotEmpty) {
-                  // Insert into database
-                  final dbHelper = DatabaseHelper();
-                  await dbHelper.insertProfile({
-                    'name': name,
-                    'email': email,
-                  });
+                  try {
+                    // Insert into database
+                    final dbHelper = DatabaseHelper();
+                    await dbHelper.insertProfile({
+                      'name': name,
+                      'email': email,
+                    });
 
+                    // Affiche un message de succès
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Profil créé avec succès!')),
+                    );
+
+                    // Retourne à la page précédente (les paramètres)
+                    Navigator.pop(context); // Ferme la page actuelle
+                  } catch (e) {
+                    // Gérer les erreurs (ex : email déjà utilisé)
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Erreur : ${e.toString()}')),
+                    );
+                  }
+                } else {
+                  // Affiche un message d'erreur si les champs sont vides
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Profil créé avec succès!')),
+                    SnackBar(content: Text('Veuillez remplir tous les champs.')),
                   );
                 }
               },

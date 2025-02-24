@@ -1,48 +1,68 @@
 import 'dart:async';
+import 'dart:io';
+import 'package:flutter/foundation.dart'; // For kIsWeb
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'package:sqflite_common_ffi/sqflite_ffi.dart'; // For Windows, Linux, macOS
+import 'package:path_provider/path_provider.dart';
+import 'package:hive_flutter/hive_flutter.dart'; // For Web IndexedDB
 
 class DatabaseHelper {
-  // Singleton instance
   static final DatabaseHelper _instance = DatabaseHelper._internal();
-
-  // Factory constructor
   factory DatabaseHelper() => _instance;
-
-  // Private constructor
   DatabaseHelper._internal();
 
-  // Database instance
   Database? _database;
-
-  // Database name
+  Box? _hiveBox;
   static const String _dbName = 'app_database.db';
-
-  // Table name
+  static const String _hiveBoxName = 'profiles_box';
   static const String _tableName = 'profiles';
+  static late final DatabaseFactory _databaseFactory;
 
-  // Initialize the database
-  Future<Database> get database async {
-    if (_database != null) return _database!;
-    _database = await _initDatabase();
-    return _database!;
+  static Future<void> initializeDatabaseFactory() async {
+    if (kIsWeb) {
+      await Hive.initFlutter(); // Initialize Hive for Web
+    } else if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+      sqfliteFfiInit();
+      _databaseFactory = databaseFactoryFfi;
+    } else {
+      _databaseFactory = databaseFactory; // Default for Android & iOS
+    }
   }
 
-  // Create and open the database
-  Future<Database> _initDatabase() async {
-    String dbPath = await getDatabasesPath();
-    String path = join(dbPath, _dbName);
+  Future<dynamic> get database async {
+    if (kIsWeb) {
+      return await _initHiveDatabase();
+    } else {
+      return await _initDatabase();
+    }
+  }
 
-    return await openDatabase(
+  Future<Database> _initDatabase() async {
+    String path = await getDatabasePath();
+    return await _databaseFactory.openDatabase(
       path,
-      version: 1,
-      onCreate: _onCreate,
+      options: OpenDatabaseOptions(
+        version: 1,
+        onCreate: _onCreate,
+      ),
     );
   }
 
-  // Create table
+  Future<Box> _initHiveDatabase() async {
+    _hiveBox ??= await Hive.openBox<Map<String, dynamic>>(_hiveBoxName);
+    return _hiveBox!;
+  }
+
+  Future<String> getDatabasePath() async {
+    if (Platform.isAndroid || Platform.isIOS || Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+      final directory = await getApplicationDocumentsDirectory();
+      return join(directory.path, _dbName);
+    }
+    throw UnsupportedError("Unsupported platform");
+  }
+
   Future<void> _onCreate(Database db, int version) async {
-    print('Creating database and tables...'); // Debug: Vérifie l'exécution
     await db.execute('''
       CREATE TABLE $_tableName (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -52,25 +72,45 @@ class DatabaseHelper {
     ''');
   }
 
-  // Insert a profile
-  Future<int> insertProfile(Map<String, dynamic> profile) async {
-    final db = await database;
-    return await db.insert(_tableName, profile);
+  // **🔹 Fixed insertProfile for Hive**
+  Future<void> insertProfile(Map<String, dynamic> profile) async {
+    if (kIsWeb) {
+      final box = await _initHiveDatabase();
+      int newId = box.length + 1; // Auto-increment key
+      await box.put(newId, profile);
+    } else {
+      final db = await database as Database;
+      await db.insert(_tableName, profile);
+    }
   }
 
-  // Get all profiles
+  // **🔹 Fixed getProfiles for Hive**
   Future<List<Map<String, dynamic>>> getProfiles() async {
-    final db = await database;
-    return await db.query(_tableName);
+    if (kIsWeb) {
+      final box = await _initHiveDatabase();
+      return box.keys.map((key) {
+        Map<String, dynamic> profile = Map<String, dynamic>.from(box.get(key));
+        profile['id'] = key; // Ensure the key is included in the data
+        return profile;
+      }).toList();
+    } else {
+      final db = await database as Database;
+      return await db.query(_tableName);
+    }
   }
 
-  // Delete a profile
-  Future<int> deleteProfile(int id) async {
-    final db = await database;
-    return await db.delete(
-      _tableName,
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+  // **🔹 Fixed deleteProfile for Hive**
+  Future<void> deleteProfile(int id) async {
+    if (kIsWeb) {
+      final box = await _initHiveDatabase();
+      await box.delete(id);
+    } else {
+      final db = await database as Database;
+      await db.delete(
+        _tableName,
+        where: 'id = ?',
+        whereArgs: [id],
+      );
+    }
   }
 }
