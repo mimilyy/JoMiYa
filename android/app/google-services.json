@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1005644982563",
+    "project_id": "test-f8ebd",
+    "storage_bucket": "test-f8ebd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1005644982563:android:eb63bf8ae6d683c2930496",
+        "android_client_info": {
+          "package_name": "com.example.jomiya_projet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDWUJFCjxL4DiRU0UMw5oSZp3iaRJjUkac"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
