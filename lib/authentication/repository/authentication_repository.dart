@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:jomiya_projet/authentication/repository/exceptions/singup_email_password_failure.dart';
 import '../screens/welcome_screen/welcome_screen.dart';
 import '../screens/dashboard/dashboard.dart';
+import 'package:jomiya_projet/frontend/src/ui/pages/navigation_menu.dart';
 
 class AuthenticationRepository extends GetxController {
   static AuthenticationRepository get instance => Get.find();
@@ -23,26 +24,37 @@ class AuthenticationRepository extends GetxController {
 
     firebaseUser.bindStream(_auth.authStateChanges());
 
+
+/* deactivate welcome screen
+
     // Delay navigation slightly to ensure Firebase is ready
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _setInitialScreen(firebaseUser.value);
     });
 
     ever(firebaseUser, _setInitialScreen);
+
+    */
   }
 
+
+
+//No need if no welcome screen
   void _setInitialScreen(User? user) {
     if (user == null) {
       Get.offAll(() => const WelcomeScreen());
     } else {
-      Get.offAll(() => const Dashboard());
+      Get.offAll(() => const NavigationMenu());
     }
   }
+
+
+
 
   Future<void> createUserWithEmailAndPassword(String email, String password) async {
     try {
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      Get.offAll(() => const Dashboard());
+      Get.offAll(() => const NavigationMenu());
     } on FirebaseAuthException catch (e) {
       final ex = SingUpWithEmailAndPasswordFailure.code(e.code);
       print('FIREBASE AUTH EXCEPTION - ${ex.message}');
@@ -55,7 +67,7 @@ class AuthenticationRepository extends GetxController {
   Future<void> loginWithEmailAndPassword(String email, String password) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      Get.offAll(() => const Dashboard());
+      Get.offAll(() => const NavigationMenu());
     } on FirebaseAuthException catch (e) {
       print("Login failed: ${e.message}");
     } catch (e) {
@@ -65,6 +77,6 @@ class AuthenticationRepository extends GetxController {
 
   Future<void> logout() async {
     await _auth.signOut();
-    Get.offAll(() => const WelcomeScreen());
+    //Get.offAll(() => const WelcomeScreen()); //deactivate welcome screen
   }
 }

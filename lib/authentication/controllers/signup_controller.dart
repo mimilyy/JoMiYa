@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:jomiya_projet/authentication/repository/authentication_repository.dart';
 import 'package:jomiya_projet/frontend/src/ui/pages/navigation_menu.dart';
 
 class SignUpController extends GetxController {
+  static SignUpController get instance => Get.find();
+
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
-
-  final formKey = GlobalKey<FormState>();
+  
+  final formKey = GlobalKey<FormState>(); 
 
   @override
   void onClose() {
@@ -19,17 +22,17 @@ class SignUpController extends GetxController {
     super.onClose();
   }
 
-  void signUp() {
-    if (formKey.currentState!.validate()) {
-      String username = usernameController.text.trim();
-      String email = emailController.text.trim();
-      String password = passwordController.text.trim();
-      
-      debugPrint("Inscription réussie pour : $username, $email");
+  void signUp() async {
+    if (!formKey.currentState!.validate()) return; // ✅ Vérifie d'abord si le formulaire est valide
 
-      // Redirection vers la page NavigationMenu après l'inscription réussie
-      Get.offAll(() => const NavigationMenu());
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
 
+    try {
+      await AuthenticationRepository.instance.createUserWithEmailAndPassword(email, password);
+      Get.offAll(() => const NavigationMenu()); // ✅ Redirige vers NavigationMenu après inscription
+    } catch (e) {
+      Get.snackbar("Erreur d'inscription", e.toString(), snackPosition: SnackPosition.BOTTOM);
     }
   }
 }

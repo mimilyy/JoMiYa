@@ -7,10 +7,10 @@ class SignUpForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(SignUpController());
+    final controller = Get.find<SignUpController>(); // ✅ Correction ici pour éviter de recréer l'instance
 
     return Form(
-      key: controller.formKey,
+      key: controller.formKey, 
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -25,12 +25,8 @@ class SignUpForm extends StatelessWidget {
               labelText: "Nom d'utilisateur",
               border: OutlineInputBorder(),
             ),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "Veuillez entrer un nom d'utilisateur";
-              }
-              return null;
-            },
+            validator: (value) =>
+                value == null || value.isEmpty ? "Veuillez entrer un nom d'utilisateur" : null,
           ),
           const SizedBox(height: 10),
           TextFormField(
@@ -40,12 +36,8 @@ class SignUpForm extends StatelessWidget {
               border: OutlineInputBorder(),
             ),
             keyboardType: TextInputType.emailAddress,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return "Veuillez entrer un email";
-              }
-              return null;
-            },
+            validator: (value) =>
+                value == null || value.isEmpty ? "Veuillez entrer un email" : null,
           ),
           const SizedBox(height: 10),
           TextFormField(
@@ -55,12 +47,8 @@ class SignUpForm extends StatelessWidget {
               border: OutlineInputBorder(),
             ),
             obscureText: true,
-            validator: (value) {
-              if (value == null || value.length < 6) {
-                return "Le mot de passe doit contenir au moins 6 caractères";
-              }
-              return null;
-            },
+            validator: (value) =>
+                value == null || value.length < 6 ? "Le mot de passe doit contenir au moins 6 caractères" : null,
           ),
           const SizedBox(height: 10),
           TextFormField(
@@ -70,22 +58,14 @@ class SignUpForm extends StatelessWidget {
               border: OutlineInputBorder(),
             ),
             obscureText: true,
-            validator: (value) {
-              if (value == null || value != controller.passwordController.text) {
-                return "Les mots de passe ne correspondent pas";
-              }
-              return null;
-            },
+            validator: (value) =>
+                value == null || value != controller.passwordController.text ? "Les mots de passe ne correspondent pas" : null,
           ),
           const SizedBox(height: 20),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {
-                if (controller.formKey.currentState!.validate()) {
-                  controller.signUp();
-                }
-              },
+              onPressed: controller.signUp, 
               child: const Text("S'inscrire"),
             ),
           ),
