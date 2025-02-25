@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jomiya_projet/authentication/models/user_model.dart';
@@ -44,24 +45,29 @@ class SignUpController extends GetxController {
 
 
 
-Future<void> createUser() async { 
-    
-  final user = UserModel(
-    name: usernameController.text.trim(),
-    email: emailController.text.trim(),
-    password: passwordController.text.trim(),
-  );
+Future<void> createUser() async {
+  try {
+    await AuthenticationRepository.instance
+        .createUserWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim()); //before because creates the id and has formatting conditions 
 
-    try {
-      await UserRepository.instance.createUser(user); //le point instance permet d'accéder à l'instance d'UserRopsitory géré par Getx
-      await AuthenticationRepository.instance.createUserWithEmailAndPassword(user.email, user.password);
-      //Get.to(() => const NavigationMenu()); //déjà dans repo
+    User? user = FirebaseAuth.instance.currentUser; // 🔹 Get the newly created user
+    if (user == null) throw Exception("User creation failed");
 
-    } catch (e) {
-      Get.snackbar("Erreur d'inscription", e.toString(), snackPosition: SnackPosition.BOTTOM);
-    }
+    final userModel = UserModel(
+      id: user.uid, // 🔹 Set UID as Firestore document ID
+      name: usernameController.text.trim(),
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
 
+    await UserRepository.instance.createUser(userModel);
+
+  } catch (e) {
+    Get.snackbar("Erreur d'inscription", e.toString(), snackPosition: SnackPosition.BOTTOM);
+  }
 }
+
+
 
 
 }

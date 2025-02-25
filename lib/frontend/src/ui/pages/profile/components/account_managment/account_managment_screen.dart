@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:jomiya_projet/authentication/screens/signin/signin_screen.dart';
 import 'package:jomiya_projet/authentication/screens/signup/widgets/signup_screen.dart';
+import 'package:jomiya_projet/frontend/src/ui/pages/profile/components/account_managment/account_manager_screen.dart'; // Importation de la nouvelle page
 
 class AccountManagementScreen extends StatelessWidget {
   const AccountManagementScreen({super.key});
@@ -61,11 +62,23 @@ class AccountManagementScreen extends StatelessWidget {
             // Si l'utilisateur est connecté
             else ...[
               ElevatedButton.icon(
+                icon: const Icon(Icons.manage_accounts),
+                label: const Text("Gérer mon compte"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const AccountManagerScreen()),
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton.icon(
                 icon: const Icon(Icons.logout),
                 label: const Text("Se déconnecter"),
                 onPressed: () async {
-                  await FirebaseAuth.instance.signOut(); //possibilité d'utiliser la fonction définie dans le repo aussi
-                  Navigator.pop(context); // Retour à l'écran précédent
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pop(context);
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text("Déconnecté avec succès")),
                   );
