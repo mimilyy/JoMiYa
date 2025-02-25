@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jomiya_projet/authentication/repository/authentication_repository/exceptions/singup_email_password_failure.dart';
+import 'package:jomiya_projet/frontend/src/ui/pages/profile/components/account_managment/account_managment_screen.dart';
 import '../../screens/welcome_screen/welcome_screen.dart';
 import '../../screens/dashboard/dashboard.dart';
 import 'package:jomiya_projet/frontend/src/ui/pages/navigation_menu.dart';
@@ -55,7 +56,7 @@ class AuthenticationRepository extends GetxController {
     try {
       await _auth.signOut();
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      Get.offAll(() => const NavigationMenu());
+      Get.offAll(() => const AccountManagementScreen());
     } on FirebaseAuthException catch (e) {
       final ex = SingUpWithEmailAndPasswordFailure.code(e.code);
       print('FIREBASE AUTH EXCEPTION - ${ex.message}');
@@ -74,7 +75,7 @@ Future<void> loginWithEmailAndPassword(String email, String password) async {
 
     if (userCredential.user != null) {
       print("🔥 Connexion réussie : UID = ${userCredential.user!.uid}");
-      Get.offAll(() => const NavigationMenu());
+      Get.offAll(() => const AccountManagementScreen());
     } else {
       print("❌ Erreur : utilisateur null après authentification.");
     }
@@ -88,6 +89,6 @@ Future<void> loginWithEmailAndPassword(String email, String password) async {
 
   Future<void> logout() async {
     await _auth.signOut();
-    //Get.offAll(() => const WelcomeScreen()); //deactivate welcome screen
+    Get.offAll(() => const AccountManagementScreen()); //deactivate welcome screen
   }
 }

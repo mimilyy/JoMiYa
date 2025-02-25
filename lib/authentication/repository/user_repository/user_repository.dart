@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:jomiya_projet/authentication/models/user_model.dart';
+import 'package:jomiya_projet/frontend/src/ui/pages/profile/components/preferences/monCompteScreen.dart';
 
 class UserRepository extends GetxController {
   static UserRepository get instance => Get.find();
@@ -71,4 +73,78 @@ class UserRepository extends GetxController {
       print(error.toString());
     }
   }
+
+
+Future<void> saveUserPreferences(String userId, Map<String, dynamic> preferences) async {
+  try {
+    await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(userId)
+        .collection("Preferences")
+        .doc("settings") // Stockage unique des préférences
+        .set(preferences, SetOptions(merge: true));
+
+    Get.snackbar("Succès", "Préférences enregistrées avec succès");
+  } catch (e) {
+    Get.snackbar("Erreur", "Impossible d'enregistrer les préférences");
+    print("Erreur Firestore : ${e.toString()}");
+  }
+}
+
+
+Future<Map<String, dynamic>?> loadUserPreferences(String userId) async {
+  try {
+    DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+        .collection("Users")
+        .doc(userId)
+        .collection("Preferences")
+        .doc("settings")
+        .get();
+
+    if (snapshot.exists) {
+      return snapshot.data();
+    } else {
+      return null;
+    }
+  } catch (e) {
+    Get.snackbar("Erreur", "Impossible de charger les préférences");
+    print("Erreur Firestore : ${e.toString()}");
+    return null;
+  }
+}
+
+/*
+
+
+Future<void> _loadPreferences() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    var preferences = await loadUserPreferences(user.uid);
+    if (preferences != null) {
+      setState(() {
+        _ascenseurSelected = preferences["ascenseur"] ?? false;
+        _escaliersSelected = preferences["escaliers"] ?? false;
+        _escalatorDownSelected = preferences["escalatorDown"] ?? false;
+        _escalatorUpSelected = preferences["escalatorUp"] ?? false;
+      });
+    }
+  }
+}
+
+
+
+Future<void> _savePreferences() async {
+  User? user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    Map<String, dynamic> preferences = {
+      "ascenseur": _ascenseurSelected,
+      "escaliers": _escaliersSelected,
+      "escalatorDown": _escalatorDownSelected,
+      "escalatorUp": _escalatorUpSelected,
+    };
+    await saveUserPreferences(user.uid, preferences);
+  }
+}
+*/
+
 }
