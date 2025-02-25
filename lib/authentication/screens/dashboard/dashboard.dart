@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../repository/authentication_repository.dart';
+import '../../repository/authentication_repository/authentication_repository.dart';
 
 class Dashboard extends StatelessWidget {
   const Dashboard({super.key});

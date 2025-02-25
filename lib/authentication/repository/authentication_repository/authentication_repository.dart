@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jomiya_projet/authentication/repository/exceptions/singup_email_password_failure.dart';
-import '../screens/welcome_screen/welcome_screen.dart';
-import '../screens/dashboard/dashboard.dart';
+import 'package:jomiya_projet/authentication/repository/authentication_repository/exceptions/singup_email_password_failure.dart';
+import '../../screens/welcome_screen/welcome_screen.dart';
+import '../../screens/dashboard/dashboard.dart';
 import 'package:jomiya_projet/frontend/src/ui/pages/navigation_menu.dart';
 
 class AuthenticationRepository extends GetxController {

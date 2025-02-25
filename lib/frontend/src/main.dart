@@ -1,7 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:jomiya_projet/authentication/repository/authentication_repository.dart';
+import 'package:jomiya_projet/authentication/repository/authentication_repository/authentication_repository.dart';
+import 'package:jomiya_projet/authentication/repository/user_repository/user_repository.dart';
 import 'package:jomiya_projet/firebase_options.dart';
 import 'ui/pages/navigation_menu.dart';
 import 'utils/theme/theme.dart';
@@ -31,10 +32,11 @@ class MyApp extends StatelessWidget {
 
       //ajouts pour FireBase initialement
       initialBinding: BindingsBuilder(() {
-        Get.put(AuthenticationRepository()); // ✅ Initialisation propre de GetX
-        Get.put(SignUpController()); // ✅ Ajout ici pour éviter l'erreur
+        Get.put(AuthenticationRepository()); // Initialisation propre pour GetX
+        Get.put(SignUpController()); 
+        Get.put(UserRepository());
       }),
-      initialRoute: '/1', // ✅ Définir la route initiale
+      initialRoute: '/1', // Définir la route initiale
       getPages: [
         GetPage(name: '/', page: () => const WelcomeScreen()), //aller voir dans auth repo pour réactiver
         GetPage(name: '/1', page: () => const NavigationMenu()),

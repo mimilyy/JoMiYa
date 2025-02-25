@@ -7,20 +7,24 @@ class SignUpForm extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.find<SignUpController>(); // ✅ Correction ici pour éviter de recréer l'instance
+    final controller = Get.find<SignUpController>(); // ne pas recréer l'instance, cherche celle existante
 
-    return Form(
-      key: controller.formKey, 
+    return Form( //form est un widget qui permet la validation des champs, géré avec une clé
+      key: controller.formKey, //utilise une clé globale définie dans SignUpController pour gérer la validation (dans SignUpController)
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+
+
+          const Text( //titre du formulaire
             "Créer un compte",
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
+
+
           const SizedBox(height: 20),
-          TextFormField(
-            controller: controller.usernameController,
+          TextFormField(    //Champ nom d'utilisateur avec sa validation simple (text non vide)
+            controller: controller.usernameController, //lié au controlleur, pour récupérer le contenu du champ, afficher dynamiquement le texte
             decoration: const InputDecoration(
               labelText: "Nom d'utilisateur",
               border: OutlineInputBorder(),
@@ -28,8 +32,11 @@ class SignUpForm extends StatelessWidget {
             validator: (value) =>
                 value == null || value.isEmpty ? "Veuillez entrer un nom d'utilisateur" : null,
           ),
+
+
+
           const SizedBox(height: 10),
-          TextFormField(
+          TextFormField(      //Champ email
             controller: controller.emailController,
             decoration: const InputDecoration(
               labelText: "Email",
@@ -39,8 +46,11 @@ class SignUpForm extends StatelessWidget {
             validator: (value) =>
                 value == null || value.isEmpty ? "Veuillez entrer un email" : null,
           ),
+
+
+
           const SizedBox(height: 10),
-          TextFormField(
+          TextFormField(   //Champ mot de passe
             controller: controller.passwordController,
             decoration: const InputDecoration(
               labelText: "Mot de passe",
@@ -50,8 +60,10 @@ class SignUpForm extends StatelessWidget {
             validator: (value) =>
                 value == null || value.length < 6 ? "Le mot de passe doit contenir au moins 6 caractères" : null,
           ),
+
+
           const SizedBox(height: 10),
-          TextFormField(
+          TextFormField(   //Champ confirmer le mot de place
             controller: controller.confirmPasswordController,
             decoration: const InputDecoration(
               labelText: "Confirmer le mot de passe",
@@ -61,14 +73,31 @@ class SignUpForm extends StatelessWidget {
             validator: (value) =>
                 value == null || value != controller.passwordController.text ? "Les mots de passe ne correspondent pas" : null,
           ),
+
+
           const SizedBox(height: 20),
-          SizedBox(
+          SizedBox(    //Bouton s'inscrire avec le déclanchement de la logique
             width: double.infinity,
-            child: ElevatedButton(
-              onPressed: controller.signUp, 
-              child: const Text("S'inscrire"),
+            child: 
+             ElevatedButton(
+              onPressed: () {
+                if (controller.formKey.currentState!.validate()){
+            
+              //controller.signUp(); // authentication with email and password
+              //Auth with phone number also possible
+
+              //Firestore for auth data + signup
+              //Passing the user data to the controller
+              controller.createUser();
+                }},
+              child: const Text("S'incrire"),
+
+
             ),
           ),
+
+
+
         ],
       ),
     );
