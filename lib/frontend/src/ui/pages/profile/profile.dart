@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'components/profile_menu.dart';
-import 'components/profile_pic.dart';
-import 'components/monCompteScreen.dart';
+import 'package:jomiya_projet/frontend/src/ui/pages/profile/components/account_managment/account_managment_screen.dart';
+import 'components/preferences/profile_menu.dart';
+import 'components/preferences/profile_pic.dart';
+import 'components/preferences/monCompteScreen.dart';
 import 'package:jomiya_projet/authentication/screens/signup/widgets/signup_screen.dart';
+import 'package:jomiya_projet/authentication/screens/signin/signin_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   static String routeName = "/profile";
@@ -29,10 +31,25 @@ class ProfileScreen extends StatelessWidget {
                 // Utilisation de la navigation pour aller vers MonCompteScreen
                 Navigator.push(
                   context,
+                  MaterialPageRoute(builder: (context) => const AccountManagementScreen()), 
+                );
+              },
+            ),
+
+            ProfileMenu(
+              text: "Préférences",
+              icon: Icon(Icons.account_circle),  // Icône Flutter
+              press: () {
+                // Utilisation de la navigation pour aller vers MonCompteScreen
+                Navigator.push(
+                  context,
                   MaterialPageRoute(builder: (context) => const MonCompteScreen()),
                 );
               },
             ),
+
+            
+
             ProfileMenu(
               text: "Notifications",
               icon: Icon(Icons.notifications),  // Icône Flutter
@@ -48,6 +65,9 @@ class ProfileScreen extends StatelessWidget {
               icon: Icon(Icons.help),  // Icône Flutter
               press: () {} ,
             ),
+
+
+            /*
             ProfileMenu(
               text: "Se connecter",
               icon: Icon(Icons.login),
@@ -55,7 +75,7 @@ class ProfileScreen extends StatelessWidget {
                 // Utilisation de la navigation pour aller vers signup_screen
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                  MaterialPageRoute(builder: (context) => const SignInScreen()),
                 );
               },
             ),
@@ -64,7 +84,7 @@ class ProfileScreen extends StatelessWidget {
               icon: Icon(Icons.logout),  // Icône Flutter
               press: () {} ,
             ),
- 
+           */
           ],
         ),
       ),

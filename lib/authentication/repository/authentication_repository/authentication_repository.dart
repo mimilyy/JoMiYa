@@ -53,6 +53,7 @@ class AuthenticationRepository extends GetxController {
 
   Future<void> createUserWithEmailAndPassword(String email, String password) async {
     try {
+      await _auth.signOut();
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
       Get.offAll(() => const NavigationMenu());
     } on FirebaseAuthException catch (e) {
@@ -64,16 +65,26 @@ class AuthenticationRepository extends GetxController {
     }
   }
 
-  Future<void> loginWithEmailAndPassword(String email, String password) async {
-    try {
-      await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+Future<void> loginWithEmailAndPassword(String email, String password) async {
+  try {
+    await _auth.signOut(); // Déconnecte l'utilisateur avant chaque connexion
+
+    UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+    if (userCredential.user != null) {
+      print("🔥 Connexion réussie : UID = ${userCredential.user!.uid}");
       Get.offAll(() => const NavigationMenu());
-    } on FirebaseAuthException catch (e) {
-      print("Login failed: ${e.message}");
-    } catch (e) {
-      print("An unexpected error occurred: $e");
+    } else {
+      print("❌ Erreur : utilisateur null après authentification.");
     }
+  } on FirebaseAuthException catch (e) {
+    print("⚠️ FirebaseAuthException : ${e.code} - ${e.message}");
+  } catch (e) {
+    print("🚨 Erreur inattendue : $e");
   }
+}
+
 
   Future<void> logout() async {
     await _auth.signOut();

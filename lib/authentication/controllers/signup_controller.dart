@@ -55,7 +55,7 @@ Future<void> createUser() async {
     try {
       await UserRepository.instance.createUser(user); //le point instance permet d'accéder à l'instance d'UserRopsitory géré par Getx
       await AuthenticationRepository.instance.createUserWithEmailAndPassword(user.email, user.password);
-      Get.to(() => const NavigationMenu());
+      //Get.to(() => const NavigationMenu()); //déjà dans repo
 
     } catch (e) {
       Get.snackbar("Erreur d'inscription", e.toString(), snackPosition: SnackPosition.BOTTOM);

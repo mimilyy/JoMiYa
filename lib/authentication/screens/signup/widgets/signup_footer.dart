@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:jomiya_projet/authentication/screens/signin/signin_screen.dart';
 
 class SignUpFooter extends StatelessWidget {
   const SignUpFooter({Key? key}) : super(key: key);
@@ -10,9 +11,12 @@ class SignUpFooter extends StatelessWidget {
       children: [
         const Text("Vous avez déjà un compte ?"),
         TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
+        onPressed: () {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const SignInScreen()),
+          );
+        },
           child: const Text("Se connecter"),
         ),
       ],

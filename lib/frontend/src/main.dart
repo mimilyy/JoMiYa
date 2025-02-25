@@ -8,7 +8,7 @@ import 'ui/pages/navigation_menu.dart';
 import 'utils/theme/theme.dart';
 import 'package:jomiya_projet/authentication/screens/welcome_screen/welcome_screen.dart';
 import 'package:jomiya_projet/authentication/controllers/signup_controller.dart';
-
+import 'package:jomiya_projet/authentication/controllers/signin_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,9 +31,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       //ajouts pour FireBase initialement
-      initialBinding: BindingsBuilder(() {
-        Get.put(AuthenticationRepository()); // Initialisation propre pour GetX
+      initialBinding: BindingsBuilder(() { 
+        Get.put(AuthenticationRepository()); // Initialisation propre pour GetX, des instances nécessaires au fonctionnement des fct suivantes
         Get.put(SignUpController()); 
+        Get.put(SignInController()); 
         Get.put(UserRepository());
       }),
       initialRoute: '/1', // Définir la route initiale
