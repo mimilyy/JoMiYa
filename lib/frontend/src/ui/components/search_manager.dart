@@ -22,7 +22,7 @@ class SearchManager extends StatefulWidget {
 class SearchManagerState extends State<SearchManager> {
   TextEditingController _searchController = TextEditingController();
   List<String> _recentSearches = []; // Liste pour stocker les recherches récentes
-  bool _showRecentSearches = true; // Contrôle l'affichage des recherches récentes
+  bool _showRecentSearches = false; // Contrôle l'affichage des recherches récentes, initialisé à false
 
   @override
   void initState() {
@@ -40,10 +40,10 @@ class SearchManagerState extends State<SearchManager> {
   Future<void> _saveRecentSearch(String query) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _recentSearches.insert(0, query);
-    _recentSearches=_recentSearches.toSet().toList(); // Permet de ne pas afficher un doublon de recherche
+    _recentSearches = _recentSearches.toSet().toList(); // Éviter les doublons
 
     if (_recentSearches.length > 2) {
-      _recentSearches = _recentSearches.sublist(0, 2);
+      _recentSearches = _recentSearches.sublist(0, 2); // Limiter le nombre de recherches récentes à 2
     }
     await prefs.setStringList('recent_searches', _recentSearches);
   }
@@ -63,9 +63,7 @@ class SearchManagerState extends State<SearchManager> {
     return null;
   }
 
-
-
-// Dans _zoomToLocation
+  // Fonction pour zoomer sur un lieu
   void _zoomToLocation(LatLng targetLocation) {
     setState(() {
       widget.markers.clear();
@@ -74,16 +72,10 @@ class SearchManagerState extends State<SearchManager> {
           point: targetLocation,
           width: 60,
           height: 60,
-          child: GestureDetector(
-            /* // Quand je tape ça montre les itineraires options
-            onTap: () {
-              ItineraireManager.showItineraireOptions(context, targetLocation);
-            },*/
-            child: const Icon(
-              Icons.location_pin,
-              size: 30,
-              color: Colors.red,
-            ),
+          child: const Icon(
+            Icons.location_pin,
+            size: 30,
+            color: Colors.red,
           ),
         ),
       );
@@ -91,14 +83,13 @@ class SearchManagerState extends State<SearchManager> {
     widget.mapController.move(targetLocation, 15);
   }
 
-
   void _triggerSearch(String query) async {
     final location = await _searchLocation(query);
     if (location != null) {
       _zoomToLocation(location);
       _saveRecentSearch(query); // Sauvegarder la recherche
       setState(() {
-        _showRecentSearches = true; // Afficher les recherches après une nouvelle recherche
+        _showRecentSearches = false; // Masquer l'historique après une recherche réussie
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -107,17 +98,6 @@ class SearchManagerState extends State<SearchManager> {
     }
   }
 
-  void hideRecentSearches() {
-    setState(() {
-      _showRecentSearches = false; // Masquer les recherches récentes
-    });
-  }
-  // Méthode pour afficher les recherches récentes
-  void showRecentSearches() {
-    setState(() {
-      _showRecentSearches = true;  // Met à jour la variable d'état
-    });
-  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -137,9 +117,12 @@ class SearchManagerState extends State<SearchManager> {
                     _triggerSearch(value); // Recherche au clavier (entrée)
                   },
                   onTap: () {
-                    setState(() {
-                      _showRecentSearches = true; // Afficher les recherches récentes lorsqu'on tape dans la barre de recherche
-                    });
+                    // Ne pas afficher l'historique juste après le tap dans la barre de recherche
+                    if (_recentSearches.isNotEmpty) {
+                      setState(() {
+                        _showRecentSearches = true; // Afficher l'historique si présent
+                      });
+                    }
                   },
                 ),
               ),
@@ -150,8 +133,8 @@ class SearchManagerState extends State<SearchManager> {
             ],
           ),
         ),
-        // Affichage des dernières recherches
-        if (_recentSearches.isNotEmpty && _showRecentSearches)
+        // Affichage des dernières recherches si l'utilisateur a effectué une recherche
+        if (_showRecentSearches && _recentSearches.isNotEmpty)
           Column(
             children: _recentSearches.map((search) {
               return ListTile(
