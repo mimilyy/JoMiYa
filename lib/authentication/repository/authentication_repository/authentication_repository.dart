@@ -39,7 +39,7 @@ class AuthenticationRepository extends GetxController {
   }
 
 
-
+/*
 //No need if no welcome screen
   void _setInitialScreen(User? user) {
     if (user == null) {
@@ -48,7 +48,7 @@ class AuthenticationRepository extends GetxController {
       Get.offAll(() => const NavigationMenu());
     }
   }
-
+*/
 
 
 
@@ -56,7 +56,8 @@ class AuthenticationRepository extends GetxController {
     try {
       await _auth.signOut();
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      Get.offAll(() => const AccountManagementScreen());
+      Get.back();
+      //Get.off(() => const AccountManagementScreen());
     } on FirebaseAuthException catch (e) {
       final ex = SingUpWithEmailAndPasswordFailure.code(e.code);
       print('FIREBASE AUTH EXCEPTION - ${ex.message}');
@@ -75,7 +76,8 @@ Future<void> loginWithEmailAndPassword(String email, String password) async {
 
     if (userCredential.user != null) {
       print("🔥 Connexion réussie : UID = ${userCredential.user!.uid}");
-      Get.offAll(() => const AccountManagementScreen());
+      //Get.off(() => const AccountManagementScreen());
+      Get.back();
     } else {
       print("❌ Erreur : utilisateur null après authentification.");
     }
@@ -89,6 +91,7 @@ Future<void> loginWithEmailAndPassword(String email, String password) async {
 
   Future<void> logout() async {
     await _auth.signOut();
-    Get.offAll(() => const AccountManagementScreen()); //deactivate welcome screen
+    Get.back();
+    //Get.off(() => const AccountManagementScreen()); //deactivate welcome screen
   }
 }

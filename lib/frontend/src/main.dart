@@ -37,9 +37,9 @@ class MyApp extends StatelessWidget {
         Get.put(SignInController()); 
         Get.put(UserRepository());
       }),
-      initialRoute: '/1', // Définir la route initiale
+      initialRoute: '/1', // Définit une pile de pages flutter, dans lequels on navigue avec les flèches et en cliquant dessus
       getPages: [
-        GetPage(name: '/', page: () => const WelcomeScreen()), //aller voir dans auth repo pour réactiver
+        //GetPage(name: '/', page: () => const WelcomeScreen()), //désactivée 
         GetPage(name: '/1', page: () => const NavigationMenu()),
         // Ajoutez ici d'autres pages si nécessaire
       ],
