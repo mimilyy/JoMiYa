@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'preferencesResultScreen.dart';
-import '../../../../utils/constants/constants.dart'; // Assurez-vous d'importer les constantes si vous en avez
+import '../../../../../utils/constants/constants.dart'; // Assurez-vous d'importer les constantes si vous en avez
 
 
 class MonCompteScreen extends StatefulWidget {

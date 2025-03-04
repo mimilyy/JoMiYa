@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:iconsax_flutter/iconsax_flutter.dart';
-import './profile/profile.dart';
+import 'profile/profile.dart';
 import '../../services/VoyagerScreen.dart';
 
 class NavigationMenu extends StatelessWidget {
