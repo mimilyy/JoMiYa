@@ -1,3 +1,4 @@
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -56,8 +57,13 @@ class AuthenticationRepository extends GetxController {
     try {
       await _auth.signOut();
       await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      Get.back();
-      //Get.off(() => const AccountManagementScreen());
+
+      // Retourner à la page précédente après la création de l'utilisateur (par exemple, une page d'inscription)
+      Get.back();  // Revenir à la page précédente (peut être une page de formulaire d'inscription)
+      Get.back();  // Revenir encore à l'écran précédent (par exemple, WelcomeScreen)
+
+      // Rediriger l'utilisateur vers la page appropriée après la création du compte
+      Get.to(() => const AccountManagementScreen());  // Aller à la page de gestion du compte
     } on FirebaseAuthException catch (e) {
       final ex = SingUpWithEmailAndPasswordFailure.code(e.code);
       print('FIREBASE AUTH EXCEPTION - ${ex.message}');
@@ -68,30 +74,43 @@ class AuthenticationRepository extends GetxController {
   }
 
 
-Future<void> loginWithEmailAndPassword(String email, String password) async {
-  try {
-    await _auth.signOut(); // Déconnecte l'utilisateur avant chaque connexion
 
-    UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+  Future<void> loginWithEmailAndPassword(String email, String password) async {
+    try {
+      await _auth.signOut(); // Déconnecte l'utilisateur avant chaque connexion
 
-    if (userCredential.user != null) {
-      print("🔥 Connexion réussie : UID = ${userCredential.user!.uid}");
-      //Get.off(() => const AccountManagementScreen());
-      Get.back();
-    } else {
-      print("❌ Erreur : utilisateur null après authentification.");
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: email, password: password);
+
+      if (userCredential.user != null) {
+        print("🔥 Connexion réussie : UID = ${userCredential.user!.uid}");
+
+        // Revenir à la page précédente (par exemple, la page de connexion)
+        Get.back();  // Revenir à la page précédente
+        Get.back();  // Retourner encore une fois à la page précédente (par exemple, WelcomeScreen)
+
+        // Aller vers la page de menu de navigation ou une autre page principale
+        Get.to(() => const NavigationMenu());  // Rediriger vers la page principale
+      } else {
+        print("❌ Erreur : utilisateur null après authentification.");
+      }
+    } on FirebaseAuthException catch (e) {
+      print("⚠️ FirebaseAuthException : ${e.code} - ${e.message}");
+    } catch (e) {
+      print("🚨 Erreur inattendue : $e");
     }
-  } on FirebaseAuthException catch (e) {
-    print("⚠️ FirebaseAuthException : ${e.code} - ${e.message}");
-  } catch (e) {
-    print("🚨 Erreur inattendue : $e");
   }
-}
+
 
 
   Future<void> logout() async {
     await _auth.signOut();
-    Get.back();
-    //Get.off(() => const AccountManagementScreen()); //deactivate welcome screen
+
+    // Revenir aux pages précédentes, comme la page de connexion ou de bienvenue
+    Get.back();  // Revenir à la page de connexion ou bienvenue
+    Get.back();  // Retourner encore une fois (vers WelcomeScreen ou page d'accueil)
+
+    // Rediriger vers l'écran de bienvenue ou l'écran d'authentification
+    Get.to(() => const WelcomeScreen());  // Aller à l'écran de bienvenue
   }
+
 }
