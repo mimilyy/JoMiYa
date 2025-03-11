@@ -8,8 +8,8 @@ class SignInController extends GetxController {
 
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  
-  final formKey = GlobalKey<FormState>(); 
+
+  final formKey = GlobalKey<FormState>();
 
   @override
   void onClose() {

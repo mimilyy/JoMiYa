@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jomiya_projet/frontend/src/ui/pages/navigation_menu.dart';
-import '../signup/widgets/signup_screen.dart';
+import '../signin/signin_screen.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -65,7 +65,7 @@ class WelcomeScreen extends StatelessWidget {
                 ),
                 child: TextButton(
                   onPressed: () {
-                    Get.to(() => const SignUpScreen());
+                    Get.to(() => const SignInScreen());
                   },
                   style: TextButton.styleFrom(
                     foregroundColor: Color(0xFFFF7643), // Couleur du texte

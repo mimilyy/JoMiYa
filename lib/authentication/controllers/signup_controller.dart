@@ -14,8 +14,8 @@ class SignUpController extends GetxController {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
-  
-  final formKey = GlobalKey<FormState>(); 
+
+  final formKey = GlobalKey<FormState>();
 
   @override
   void onClose() {
@@ -30,7 +30,7 @@ class SignUpController extends GetxController {
 
     //Déplacé dans le form pour que l'on ne fasse le test qu'une seule fois pour plusieurs actions
     //if (!formKey.currentState!.validate()) return; // ✅ Vérifie d'abord si le formulaire est valide avec les clés
-    
+
     String email = emailController.text.trim(); //récupère les valeurs, peut être appelé depuis signup form mais semble plus logique ici
     String password = passwordController.text.trim();
 
@@ -45,27 +45,27 @@ class SignUpController extends GetxController {
 
 
 
-Future<void> createUser() async {
-  try {
-    await AuthenticationRepository.instance
-        .createUserWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim()); //before because creates the id and has formatting conditions 
+  Future<void> createUser() async {
+    try {
+      await AuthenticationRepository.instance
+          .createUserWithEmailAndPassword(emailController.text.trim(), passwordController.text.trim()); //before because creates the id and has formatting conditions
 
-    User? user = FirebaseAuth.instance.currentUser; // 🔹 Get the newly created user
-    if (user == null) throw Exception("User creation failed");
+      User? user = FirebaseAuth.instance.currentUser; // 🔹 Get the newly created user
+      if (user == null) throw Exception("User creation failed");
 
-    final userModel = UserModel(
-      id: user.uid, // 🔹 Set UID as Firestore document ID
-      name: usernameController.text.trim(),
-      email: emailController.text.trim(),
-      password: passwordController.text.trim(),
-    );
+      final userModel = UserModel(
+        id: user.uid, // 🔹 Set UID as Firestore document ID
+        name: usernameController.text.trim(),
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
 
-    await UserRepository.instance.createUser(userModel);
+      await UserRepository.instance.createUser(userModel);
 
-  } catch (e) {
-    Get.snackbar("Erreur d'inscription", e.toString(), snackPosition: SnackPosition.BOTTOM);
+    } catch (e) {
+      Get.snackbar("Erreur d'inscription", e.toString(), snackPosition: SnackPosition.BOTTOM);
+    }
   }
-}
 
 
 
