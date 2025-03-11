@@ -38,7 +38,7 @@ class ProfileScreen extends StatelessWidget {
 
             ProfileMenu(
               text: "Préférences",
-              icon: Icon(Icons.account_circle),  // Icône Flutter
+              icon: Icon(Icons.favorite),  // Icône Flutter
               press: () {
                 // Utilisation de la navigation pour aller vers MonCompteScreen
                 Navigator.push(
