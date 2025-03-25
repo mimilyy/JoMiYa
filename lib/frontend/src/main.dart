@@ -32,16 +32,16 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       //ajouts pour FireBase initialement
-      initialBinding: BindingsBuilder(() { 
+      initialBinding: BindingsBuilder(() {
         Get.put(AuthenticationRepository()); // Initialisation propre pour GetX, des instances nécessaires au fonctionnement des fct suivantes
-        Get.put(SignUpController()); 
-        Get.put(SignInController()); 
+        Get.put(SignUpController());
+        Get.put(SignInController());
         Get.put(UserRepository());
         Get.put(FavoritesController());
       }),
       initialRoute: '/1', // Définit une pile de pages flutter, dans lequels on navigue avec les flèches et en cliquant dessus
       getPages: [
-        //GetPage(name: '/', page: () => const WelcomeScreen()), //désactivée 
+        //GetPage(name: '/', page: () => const WelcomeScreen()), //désactivée
         GetPage(name: '/1', page: () => const NavigationMenu()),
         // Ajoutez ici d'autres pages si nécessaire
       ],

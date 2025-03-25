@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class PreferencesResultScreen extends StatelessWidget {
   final String preferences;
   final bool ascenseurSelected;
@@ -58,20 +57,25 @@ class PreferencesResultScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 20),
-            // Bouton "Retour" avec couleur violet clair et texte épuré
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context); // Retour à la page précédente
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: Colors.grey,
-                backgroundColor: Color(0xFFF5F6F9), // Utilisation du violet clair ici
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            // Nouveau bouton "Retour" avec contour et style modifié
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(color: Color(0xFFFF7643), width: 1.5),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text(
-                "Retour",
-                style: TextStyle(fontSize: 16),
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pop(context); // Retour à la page précédente
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.orange, // Couleur orange
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+                child: const Text(
+                  "Retour",
+                  style: TextStyle(fontSize: 16), // Taille de texte plus fine
+                ),
               ),
             ),
           ],

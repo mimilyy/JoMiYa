@@ -55,10 +55,10 @@ class SearchManagerState extends State<SearchManager> {
   Future<void> _saveRecentSearch(String query) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _recentSearches.insert(0, query);
-    _recentSearches = _recentSearches.toSet().toList(); // Supprime les doublons
+    _recentSearches = _recentSearches.toSet().toList(); // Éviter les doublons
 
-    if (_recentSearches.length > 5) {
-      _recentSearches = _recentSearches.sublist(0, 5); // Garde seulement 5 recherches max
+    if (_recentSearches.length > 2) {
+      _recentSearches = _recentSearches.sublist(0, 2); // Limiter le nombre de recherches récentes à 2
     }
     await prefs.setStringList('recent_searches', _recentSearches);
   }
@@ -130,7 +130,7 @@ class SearchManagerState extends State<SearchManager> {
       widget.onLocationSelected(location, placeName); // ✅ Correction ici
 
       setState(() {
-        _showRecentSearches = false;
+        _showRecentSearches = false; // Masquer l'historique après une recherche réussie
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -157,9 +157,12 @@ class SearchManagerState extends State<SearchManager> {
                     triggerSearch(value);
                   },
                   onTap: () {
-                    setState(() {
-                      _showRecentSearches = true;
-                    });
+                    // Ne pas afficher l'historique juste après le tap dans la barre de recherche
+                    if (_recentSearches.isNotEmpty) {
+                      setState(() {
+                        _showRecentSearches = true; // Afficher l'historique si présent
+                      });
+                    }
                   },
                 ),
               ),
@@ -170,7 +173,8 @@ class SearchManagerState extends State<SearchManager> {
             ],
           ),
         ),
-        if (_recentSearches.isNotEmpty && _showRecentSearches)
+        // Affichage des dernières recherches si l'utilisateur a effectué une recherche
+        if (_showRecentSearches && _recentSearches.isNotEmpty)
           Column(
             children: _recentSearches.map((search) {
               return ListTile(
