@@ -25,13 +25,13 @@ class SearchManagerState extends State<SearchManager> {
   final TextEditingController _searchController = TextEditingController();
   List<String> _recentSearches = [];
   bool _showRecentSearches = true;
-  Set<String> _favoriteDestinations = {};
+
 
   @override
   void initState() {
     super.initState();
     _loadRecentSearches();
-    _loadFavorites();
+
   }
 
   Future<void> _loadRecentSearches() async {
@@ -41,16 +41,7 @@ class SearchManagerState extends State<SearchManager> {
     });
   }
 
-  Future<void> _loadFavorites() async {
-    try {
-      var snapshot = await FirebaseFirestore.instance.collection('favorites').get();
-      setState(() {
-        _favoriteDestinations = snapshot.docs.map((doc) => doc['name'] as String).toSet();
-      });
-    } catch (e) {
-      print("Erreur lors du chargement des favoris: $e");
-    }
-  }
+
 
   Future<void> _saveRecentSearch(String query) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -83,21 +74,7 @@ class SearchManagerState extends State<SearchManager> {
     return null;
   }
 
-  void _toggleFavorite(String destination) async {
-    final docRef = FirebaseFirestore.instance.collection('favorites').doc(destination);
 
-    if (_favoriteDestinations.contains(destination)) {
-      await docRef.delete();
-      setState(() {
-        _favoriteDestinations.remove(destination);
-      });
-    } else {
-      await docRef.set({'name': destination});
-      setState(() {
-        _favoriteDestinations.add(destination);
-      });
-    }
-  }
 
   void _zoomToLocation(LatLng targetLocation) {
     setState(() {
@@ -183,13 +160,6 @@ class SearchManagerState extends State<SearchManager> {
                   _searchController.text = search;
                   triggerSearch(search);
                 },
-                trailing: IconButton(
-                  icon: Icon(
-                    _favoriteDestinations.contains(search) ? Icons.star : Icons.star_border,
-                    color: _favoriteDestinations.contains(search) ? Colors.yellow : Colors.grey,
-                  ),
-                  onPressed: () => _toggleFavorite(search),
-                ),
               );
             }).toList(),
           ),
