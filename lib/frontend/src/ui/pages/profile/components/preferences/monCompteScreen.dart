@@ -72,7 +72,7 @@ class _MonCompteScreenState extends State<MonCompteScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Mon Compte - Préférences de Déplacement"),
+        title: const Text("Préférences de déplacement"),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
@@ -96,55 +96,60 @@ class _MonCompteScreenState extends State<MonCompteScreen> {
               "Escaliers",
               "assets/images/escaliers.png",
               _escaliersSelected,
-              () => setState(() => _escaliersSelected = !_escaliersSelected),
+                  () => setState(() => _escaliersSelected = !_escaliersSelected),
             ),
             _buildPreferenceButton(
               "Escalier mécanique descendant",
               "assets/images/escalatordown.png",
               _escalatorDownSelected,
-              () => setState(() => _escalatorDownSelected = !_escalatorDownSelected),
+                  () => setState(() => _escalatorDownSelected = !_escalatorDownSelected),
             ),
             _buildPreferenceButton(
               "Escalier mécanique montant",
               "assets/images/escalatorup.png",
               _escalatorUpSelected,
-              () => setState(() => _escalatorUpSelected = !_escalatorUpSelected),
+                  () => setState(() => _escalatorUpSelected = !_escalatorUpSelected),
             ),
             _buildPreferenceButton(
               "Ascenseur",
               "assets/images/ascenseur.png",
               _ascenseurSelected,
-              () => setState(() => _ascenseurSelected = !_ascenseurSelected),
+                  () => setState(() => _ascenseurSelected = !_ascenseurSelected),
             ),
 
             const SizedBox(height: 20),
 
-            // Bouton Voir les résultats + Sauvegarde des préférences
-            ElevatedButton(
-              onPressed: () async {
-                await _saveUserPreferences(); // 🔹 Sauvegarder avant d'afficher les résultats
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PreferencesResultScreen(
-                      preferences: _getPreferencesText(),
-                      ascenseurSelected: _ascenseurSelected,
-                      escaliersSelected: _escaliersSelected,
-                      escalatorDownSelected: _escalatorDownSelected,
-                      escalatorUpSelected: _escalatorUpSelected,
-                    ),
-                  ),
-                );
-              },
-              style: ElevatedButton.styleFrom(
-                foregroundColor: kPrimaryColor,
-                backgroundColor: const Color(0xFFF5F6F9),
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            // Nouveau bouton "Voir les résultats" avec contour et style modifié
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(color: kPrimaryColor, width: 1.5),
+                borderRadius: BorderRadius.circular(12),
               ),
-              child: const Text(
-                "Voir les résultats",
-                style: TextStyle(fontSize: 14),
+              child: TextButton(
+                onPressed: () async {
+                  await _saveUserPreferences(); // 🔹 Sauvegarder avant d'afficher les résultats
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PreferencesResultScreen(
+                        preferences: _getPreferencesText(),
+                        ascenseurSelected: _ascenseurSelected,
+                        escaliersSelected: _escaliersSelected,
+                        escalatorDownSelected: _escalatorDownSelected,
+                        escalatorUpSelected: _escalatorUpSelected,
+                      ),
+                    ),
+                  );
+                },
+                style: TextButton.styleFrom(
+                  foregroundColor: Colors.orange, // Couleur orange
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                ),
+                child: const Text(
+                  "Voir les résultats",
+                  style: TextStyle(fontSize: 16), // Taille de texte plus fine
+                ),
               ),
             ),
           ],
