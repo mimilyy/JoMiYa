@@ -2,32 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart' as flutterMap;
 import 'package:latlong2/latlong.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-//import '../../services/routing/itineraire_manager.dart';
 
 class SearchManager extends StatefulWidget {
-  final flutterMap.MapController mapController; // Le contrôleur de la carte
-  final List<flutterMap.Marker> markers; // Liste de marqueurs pour la carte
+  final flutterMap.MapController mapController;
+  final List<flutterMap.Marker> markers;
+  final void Function(LatLng, String?) onLocationSelected;
 
-  SearchManager({Key? key, required this.mapController, required this.markers}) : super(key: key);
-  static SearchManagerState? of(BuildContext context) {
-    return context.findAncestorStateOfType<SearchManagerState>();
-  }
+  SearchManager({
+    required this.mapController,
+    required this.markers,
+    required this.onLocationSelected,
+  });
 
   @override
   SearchManagerState createState() => SearchManagerState();
 }
 
 class SearchManagerState extends State<SearchManager> {
-  TextEditingController _searchController = TextEditingController();
-  List<String> _recentSearches = []; // Liste pour stocker les recherches récentes
-  bool _showRecentSearches = true; // Contrôle l'affichage des recherches récentes
+  final TextEditingController _searchController = TextEditingController();
+  List<String> _recentSearches = [];
+  bool _showRecentSearches = true;
+  Set<String> _favoriteDestinations = {};
 
   @override
   void initState() {
     super.initState();
-    _loadRecentSearches(); // Charger les recherches au démarrage
+    _loadRecentSearches();
+    _loadFavorites();
   }
 
   Future<void> _loadRecentSearches() async {
@@ -37,35 +41,64 @@ class SearchManagerState extends State<SearchManager> {
     });
   }
 
+  Future<void> _loadFavorites() async {
+    try {
+      var snapshot = await FirebaseFirestore.instance.collection('favorites').get();
+      setState(() {
+        _favoriteDestinations = snapshot.docs.map((doc) => doc['name'] as String).toSet();
+      });
+    } catch (e) {
+      print("Erreur lors du chargement des favoris: $e");
+    }
+  }
+
   Future<void> _saveRecentSearch(String query) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _recentSearches.insert(0, query);
-    _recentSearches=_recentSearches.toSet().toList(); // Permet de ne pas afficher un doublon de recherche
+    _recentSearches = _recentSearches.toSet().toList(); // Supprime les doublons
 
-    if (_recentSearches.length > 2) {
-      _recentSearches = _recentSearches.sublist(0, 2);
+    if (_recentSearches.length > 5) {
+      _recentSearches = _recentSearches.sublist(0, 5); // Garde seulement 5 recherches max
     }
     await prefs.setStringList('recent_searches', _recentSearches);
   }
 
-  Future<LatLng?> _searchLocation(String query) async {
+  Future<Map<String, dynamic>?> _searchLocation(String query) async {
     final url = Uri.parse('https://nominatim.openstreetmap.org/search?q=$query&format=json&limit=1');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      final data = json.decode(response.body);
+      final List<dynamic> data = json.decode(response.body);
       if (data.isNotEmpty) {
-        final lat = double.parse(data[0]['lat']);
-        final lon = double.parse(data[0]['lon']);
-        return LatLng(lat, lon);
+        final result = data[0];
+        final lat = double.parse(result['lat']);
+        final lon = double.parse(result['lon']);
+        final displayName = result['display_name']; // ✅ Récupère le vrai nom du lieu
+        return {
+          "location": LatLng(lat, lon),
+          "name": displayName,
+        };
       }
     }
     return null;
   }
 
+  void _toggleFavorite(String destination) async {
+    final docRef = FirebaseFirestore.instance.collection('favorites').doc(destination);
 
+    if (_favoriteDestinations.contains(destination)) {
+      await docRef.delete();
+      setState(() {
+        _favoriteDestinations.remove(destination);
+      });
+    } else {
+      await docRef.set({'name': destination});
+      setState(() {
+        _favoriteDestinations.add(destination);
+      });
+    }
+  }
 
-// Dans _zoomToLocation
   void _zoomToLocation(LatLng targetLocation) {
     setState(() {
       widget.markers.clear();
@@ -74,16 +107,10 @@ class SearchManagerState extends State<SearchManager> {
           point: targetLocation,
           width: 60,
           height: 60,
-          child: GestureDetector(
-            /* // Quand je tape ça montre les itineraires options
-            onTap: () {
-              ItineraireManager.showItineraireOptions(context, targetLocation);
-            },*/
-            child: const Icon(
-              Icons.location_pin,
-              size: 30,
-              color: Colors.red,
-            ),
+          child: const Icon(
+            Icons.location_pin,
+            size: 30,
+            color: Colors.red,
           ),
         ),
       );
@@ -91,14 +118,19 @@ class SearchManagerState extends State<SearchManager> {
     widget.mapController.move(targetLocation, 15);
   }
 
+  void triggerSearch(String query) async {
+    final result = await _searchLocation(query);
+    if (result != null) {
+      LatLng location = result["location"];
+      String placeName = result["name"]; // ✅ Utiliser le vrai nom du lieu
 
-  void _triggerSearch(String query) async {
-    final location = await _searchLocation(query);
-    if (location != null) {
       _zoomToLocation(location);
-      _saveRecentSearch(query); // Sauvegarder la recherche
+      _saveRecentSearch(placeName);
+
+      widget.onLocationSelected(location, placeName); // ✅ Correction ici
+
       setState(() {
-        _showRecentSearches = true; // Afficher les recherches après une nouvelle recherche
+        _showRecentSearches = false;
       });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -107,22 +139,10 @@ class SearchManagerState extends State<SearchManager> {
     }
   }
 
-  void hideRecentSearches() {
-    setState(() {
-      _showRecentSearches = false; // Masquer les recherches récentes
-    });
-  }
-  // Méthode pour afficher les recherches récentes
-  void showRecentSearches() {
-    setState(() {
-      _showRecentSearches = true;  // Met à jour la variable d'état
-    });
-  }
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // Barre de recherche
         Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
@@ -134,23 +154,22 @@ class SearchManagerState extends State<SearchManager> {
                     hintText: 'Entrez un lieu ou une adresse',
                   ),
                   onSubmitted: (value) {
-                    _triggerSearch(value); // Recherche au clavier (entrée)
+                    triggerSearch(value);
                   },
                   onTap: () {
                     setState(() {
-                      _showRecentSearches = true; // Afficher les recherches récentes lorsqu'on tape dans la barre de recherche
+                      _showRecentSearches = true;
                     });
                   },
                 ),
               ),
               IconButton(
                 icon: const Icon(Icons.search),
-                onPressed: () => _triggerSearch(_searchController.text),
+                onPressed: () => triggerSearch(_searchController.text),
               ),
             ],
           ),
         ),
-        // Affichage des dernières recherches
         if (_recentSearches.isNotEmpty && _showRecentSearches)
           Column(
             children: _recentSearches.map((search) {
@@ -158,8 +177,15 @@ class SearchManagerState extends State<SearchManager> {
                 title: Text(search),
                 onTap: () {
                   _searchController.text = search;
-                  _triggerSearch(search);
+                  triggerSearch(search);
                 },
+                trailing: IconButton(
+                  icon: Icon(
+                    _favoriteDestinations.contains(search) ? Icons.star : Icons.star_border,
+                    color: _favoriteDestinations.contains(search) ? Colors.yellow : Colors.grey,
+                  ),
+                  onPressed: () => _toggleFavorite(search),
+                ),
               );
             }).toList(),
           ),

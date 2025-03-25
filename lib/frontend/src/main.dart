@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:jomiya_projet/authentication/repository/authentication_repository/authentication_repository.dart';
 import 'package:jomiya_projet/authentication/repository/user_repository/user_repository.dart';
 import 'package:jomiya_projet/firebase_options.dart';
+import 'package:jomiya_projet/frontend/src/ui/pages/favorites_controller.dart';
 import 'ui/pages/navigation_menu.dart';
 import 'utils/theme/theme.dart';
 import 'package:jomiya_projet/authentication/screens/welcome_screen/welcome_screen.dart';
@@ -36,6 +37,7 @@ class MyApp extends StatelessWidget {
         Get.put(SignUpController()); 
         Get.put(SignInController()); 
         Get.put(UserRepository());
+        Get.put(FavoritesController());
       }),
       initialRoute: '/1', // Définit une pile de pages flutter, dans lequels on navigue avec les flèches et en cliquant dessus
       getPages: [
