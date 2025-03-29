@@ -5,8 +5,8 @@ import 'package:jomiya_projet/authentication/repository/authentication_repositor
 import 'package:jomiya_projet/authentication/repository/user_repository/user_repository.dart';
 import 'package:jomiya_projet/firebase_options.dart';
 import 'package:jomiya_projet/frontend/src/ui/pages/favorites_controller.dart';
-import 'ui/pages/navigation_menu.dart';
-import 'utils/theme/theme.dart';
+import 'frontend/src/ui/pages/navigation_menu.dart';
+import 'frontend/src/utils/theme/theme.dart';
 import 'package:jomiya_projet/authentication/screens/welcome_screen/welcome_screen.dart';
 import 'package:jomiya_projet/authentication/controllers/signup_controller.dart';
 import 'package:jomiya_projet/authentication/controllers/signin_controller.dart';

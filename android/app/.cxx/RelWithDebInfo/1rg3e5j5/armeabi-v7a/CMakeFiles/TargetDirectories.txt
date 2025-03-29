@@ -1,0 +1,2 @@
+C:/Users/cedri/DocumentsVrai/Projet2A/ProjetGithub/JoMiYa-1/android/app/.cxx/RelWithDebInfo/1rg3e5j5/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/cedri/DocumentsVrai/Projet2A/ProjetGithub/JoMiYa-1/android/app/.cxx/RelWithDebInfo/1rg3e5j5/armeabi-v7a/CMakeFiles/rebuild_cache.dir
