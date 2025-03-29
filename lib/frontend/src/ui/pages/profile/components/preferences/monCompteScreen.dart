@@ -30,22 +30,24 @@ class _MonCompteScreenState extends State<MonCompteScreen> {
   Future<void> _loadUserPreferences() async {
     User? user = _auth.currentUser;
     if (user == null) return; // Si aucun utilisateur n'est connecté, ne rien faire
+    try{
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await _firestore
+          .collection("Users")
+          .doc(user.uid)
+          .collection("Preferences")
+          .doc("settings") // Document contenant les préférences
+          .get();
 
-    DocumentSnapshot<Map<String, dynamic>> snapshot = await _firestore
-        .collection("Users")
-        .doc(user.uid)
-        .collection("Preferences")
-        .doc("settings") // Document contenant les préférences
-        .get();
-
-    if (snapshot.exists) {
-      setState(() {
-        _ascenseurSelected = snapshot.data()?["ascenseur"] ?? false;
-        _escaliersSelected = snapshot.data()?["escaliers"] ?? false;
-        _escalatorDownSelected = snapshot.data()?["escalatorDown"] ?? false;
-        _escalatorUpSelected = snapshot.data()?["escalatorUp"] ?? false;
-      });
+      if (snapshot.exists) {
+        setState(() {
+          _ascenseurSelected = snapshot.data()?["ascenseur"] ?? false;
+          _escaliersSelected = snapshot.data()?["escaliers"] ?? false;
+          _escalatorDownSelected = snapshot.data()?["escalatorDown"] ?? false;
+          _escalatorUpSelected = snapshot.data()?["escalatorUp"] ?? false;
+        });
+      }
     }
+    catch(e){}
   }
 
   /// 🔹 Sauvegarder les préférences utilisateur dans Firestore

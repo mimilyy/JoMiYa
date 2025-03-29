@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:jomiya_projet/authentication/repository/authentication_repository/authentication_repository.dart';
-import 'package:jomiya_projet/frontend/src/ui/pages/navigation_menu.dart';
 
 class SignInController extends GetxController {
   static SignInController get instance => Get.find();

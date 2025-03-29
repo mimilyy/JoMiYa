@@ -5,13 +5,14 @@ import 'package:latlong2/latlong.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'location_manager.dart';
-import '../utils/theme/theme.dart';
 import '../ui/components/search_manager.dart';
 import 'routing/itineraire_manager.dart';
 import 'package:jomiya_projet/frontend/src/ui/pages/navigation_menu.dart';
 import 'package:get/get.dart';
 
 class VoyagerScreen extends StatefulWidget {
+  const VoyagerScreen({super.key});
+
   @override
   _VoyagerScreenState createState() => _VoyagerScreenState();
 }
@@ -21,7 +22,7 @@ class _VoyagerScreenState extends State<VoyagerScreen> {
   
 
   final flutterMap.MapController _mapController = flutterMap.MapController();
-  List<flutterMap.Marker> _markers = [];
+  final List<flutterMap.Marker> _markers = [];
   late LocationManager _locationManager;
   late ItineraireManager _itineraireManager;
   final GlobalKey<SearchManagerState> _searchManagerKey = GlobalKey<SearchManagerState>();
@@ -62,21 +63,25 @@ class _VoyagerScreenState extends State<VoyagerScreen> {
     User? user = FirebaseAuth.instance.currentUser;
 
     if (user != null) {
-      DocumentReference userRef = FirebaseFirestore.instance.collection('Users').doc(user.uid);
-      QuerySnapshot favoritesSnapshot = await userRef.collection('favorites').get();
+      try{
+          DocumentReference userRef = FirebaseFirestore.instance.collection('Users').doc(user.uid);
+          QuerySnapshot favoritesSnapshot = await userRef.collection('favorites').get();
 
-      setState(() {
-        _favorites = favoritesSnapshot.docs.map((doc) {
-          return {
-            'name': doc['name'],
-            'latitude': doc['latitude'],
-            'longitude': doc['longitude']
-          };
-        }).toList();
-      });
+          setState(() {
+            _favorites = favoritesSnapshot.docs.map((doc) {
+              return {
+                'name': doc['name'],
+                'latitude': doc['latitude'],
+                'longitude': doc['longitude']
+              };
+            }).toList();
+          });
+      }
+      catch(e){}
     } else {
       // No action needed, as favorites will stay in memory.
     }
+
   }
 void onLocationSelected(LatLng location, String? placeName) {
   print("🔄 Mise à jour du contrôleur : $location, $placeName");
@@ -146,8 +151,8 @@ void onLocationSelected(LatLng location, String? placeName) {
               onPressed: () {
                 _locationManager.getCurrentLocation();
               },
-              child: const Icon(Icons.location_searching),
               backgroundColor: Colors.blue,
+              child: const Icon(Icons.location_searching),
             ),
           ),
           Positioned(
@@ -155,8 +160,8 @@ void onLocationSelected(LatLng location, String? placeName) {
             right: 20,
             child: FloatingActionButton(
               onPressed: _addToFavorites,
-              child: const Icon(Icons.favorite, color: Colors.red),
               backgroundColor: Colors.black,
+              child: const Icon(Icons.favorite, color: Colors.red),
             ),
           ),
         ],
@@ -165,7 +170,7 @@ void onLocationSelected(LatLng location, String? placeName) {
   }
 
 void _addToFavorites() {
-  final NavigationController? controller = Get.find<NavigationController>();
+  final NavigationController controller = Get.find<NavigationController>();
 
   if (controller == null) {
     print("❌ NavigationController non trouvé");

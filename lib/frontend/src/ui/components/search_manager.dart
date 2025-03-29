@@ -11,7 +11,7 @@ class SearchManager extends StatefulWidget {
   final List<flutterMap.Marker> markers;
   final void Function(LatLng, String?) onLocationSelected;
 
-  SearchManager({
+  const SearchManager({super.key, 
     required this.mapController,
     required this.markers,
     required this.onLocationSelected,

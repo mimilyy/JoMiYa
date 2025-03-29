@@ -3,8 +3,6 @@ import 'package:jomiya_projet/frontend/src/ui/pages/profile/components/account_m
 import 'components/preferences/profile_menu.dart';
 import 'components/preferences/profile_pic.dart';
 import 'components/preferences/monCompteScreen.dart';
-import 'package:jomiya_projet/authentication/screens/signup/widgets/signup_screen.dart';
-import 'package:jomiya_projet/authentication/screens/signin/signin_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   static String routeName = "/profile";

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:jomiya_projet/authentication/screens/signup/widgets/signup_screen.dart';
 
 class SignInFooter extends StatelessWidget {
-  const SignInFooter({Key? key}) : super(key: key);
+  const SignInFooter({super.key});
 
   @override
   Widget build(BuildContext context) {

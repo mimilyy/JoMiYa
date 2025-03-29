@@ -29,22 +29,34 @@ class FavoritesController extends GetxController {
     }
   }
 
-  void _loadFavorites() async {
-    User? user = FirebaseAuth.instance.currentUser;
+void _loadFavorites() async {
+  User? user = FirebaseAuth.instance.currentUser;
 
-    if (user != null) {
+  if (user != null) {
+    try {
       DocumentReference userRef = FirebaseFirestore.instance.collection('Users').doc(user.uid);
+      // On tente de récupérer la collection 'favorites'
       QuerySnapshot favoritesSnapshot = await userRef.collection('favorites').get();
 
-      favorites.assignAll(favoritesSnapshot.docs.map((doc) {
-        return {
-          'name': doc['name'],
-          'latitude': doc['latitude'],
-          'longitude': doc['longitude'],
-        };
-      }).toList());
+      // Si la collection 'favorites' n'existe pas ou est vide, la liste restera vide
+      if (favoritesSnapshot.docs.isEmpty) {
+        //print('Aucun favori trouvé.');
+      } else {
+        favorites.assignAll(favoritesSnapshot.docs.map((doc) {
+          return {
+            'name': doc['name'],
+            'latitude': doc['latitude'],
+            'longitude': doc['longitude'],
+          };
+        }).toList());
+      }
+    } catch (e) {
+      // Aucune erreur ne sera levée, mais un message peut être loggé
+      //print('Aucune collection favorites trouvée ou erreur lors du chargement : $e');
     }
   }
+}
+
 
   void addFavorite(String name, LatLng location) async {
     User? user = FirebaseAuth.instance.currentUser;

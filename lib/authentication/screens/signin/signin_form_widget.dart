@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../../controllers/signin_controller.dart';
 
 class SignInForm extends StatelessWidget {
-  const SignInForm({Key? key}) : super(key: key);
+  const SignInForm({super.key});
 
   @override
   Widget build(BuildContext context) {

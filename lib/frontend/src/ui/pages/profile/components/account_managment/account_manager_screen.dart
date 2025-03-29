@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:jomiya_projet/authentication/repository/user_repository/user_repository.dart';
-import '../preferences/profile_menu.dart';  // Importation de ProfileMenu
+// Importation de ProfileMenu
 import '../preferences/profile_pic.dart';   // Importation de ProfilePic
 
 class AccountManagerScreen extends StatefulWidget {

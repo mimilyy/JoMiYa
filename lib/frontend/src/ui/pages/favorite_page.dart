@@ -12,10 +12,10 @@ class FavoritesScreen extends StatelessWidget {
   final List<Map<String, dynamic>> favorites;
 
   const FavoritesScreen({
-    Key? key,
+    super.key,
     required this.onFavoriteSelected,
     required this.favorites,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
