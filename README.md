@@ -1,16 +1,3 @@
-# jomiya_projet
+# Second-year project 
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+The project aims to develop a location-based mobile application that provides users with personalized itineraries based on their preferences and accessibility needs (e.g., stairs, escalators, elevators).The application will focus on the metro and railway stations, as well as other public spaces, offering routes that consider factors like mobility options and comfort.
