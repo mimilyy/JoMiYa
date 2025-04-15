@@ -17,7 +17,7 @@ class ItineraireManager {
   });
 
   Future<void> calculateItinerary(LatLng start, LatLng end, {Function()? onUpdate}) async {
-    //final apiKey = '8d56f223-f6ee-4b0d-986b-fc06119f452a'; 
+    //final apiKey = 'apiKeyToWriteHere'; 
     //final url =
     //    'https://graphhopper.com/api/1/route?point=${start.latitude},${start.longitude}&point=${end.latitude},${end.longitude}&vehicle=foot&key=$apiKey';
     final url =
